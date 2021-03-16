@@ -4,6 +4,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import MainMenu from './MainMenu';
+import Container from '@material-ui/core/Container';
 
 const drawerWidth = 240;
 
@@ -51,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth
     },
-    content: {
-      paddingLeft: theme.spacing(9),
+    mainContent: {
+      paddingLeft: theme.spacing(8),
       flexGrow: 1
     }
   })
@@ -101,9 +102,11 @@ export default function Layout({ children }: any) {
         <MainMenu />
       </Drawer>
 
-      <main className={classes.content}>
+      <main className={classes.mainContent}>
         <Toolbar />
-        { children }
+        <Container maxWidth="xl">
+          { children }
+        </Container>
       </main>
 
       <AppBar position="fixed" className={classes.appBar}>
