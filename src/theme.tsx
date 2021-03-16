@@ -5,6 +5,7 @@ import { red } from '@material-ui/core/colors';
 const theme = createMuiTheme({
   palette: {
     primary: {
+      light: '#DFE5FF',
       main: '#556cd6',
     },
     secondary: {
@@ -32,5 +33,17 @@ const theme = createMuiTheme({
     ].join(','),
   }
 });
+
+theme.typography.button = {
+  ...theme.typography.button,
+  fontFamily: [
+    '"Roboto"',
+    '"Inter"',
+    'Arial',
+    'sans-serif'
+  ].join(','),
+  fontSize: 14,
+  fontWeight: 400
+}
 
 export default theme;
