@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
+import { createStyles, withStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-const StyledTableRow = withStyles((theme: Theme) =>
+const StyledTableRow = withStyles(() =>
   createStyles({
     root: {
       '& > *': {
@@ -21,6 +21,28 @@ const StyledTableRow = withStyles((theme: Theme) =>
     },
   }),
 )(TableRow);
+
+function createData(
+  name: string,
+  calories: number,
+  fat: number,
+  carbs: number,
+  protein: number,
+  price: number
+) {
+  return {
+    name,
+    calories,
+    fat,
+    carbs,
+    protein,
+    price,
+    history: [
+      { date: "2020-01-05", customerId: "11091700", amount: 3 },
+      { date: "2020-01-02", customerId: "Anonymous", amount: 1 },
+    ],
+  };
+}
 
 export default function InnerRow(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
