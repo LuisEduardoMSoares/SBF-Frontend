@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "devDependencies": {
@@ -32,5 +32,8 @@
     "@types/react-dom": "latest",
     "@types/react-router-dom": "latest",
     "typescript": "latest"
+  },
+  "engines": {
+    "node": "12.4"
   }
 }

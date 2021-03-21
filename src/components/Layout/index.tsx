@@ -11,7 +11,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
-      zIndex: theme.zIndex.drawer + 1,
+      zIndex: 10000,
     },
     root: {
       display: 'flex',
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
       overflowX: 'hidden',
       position: 'fixed',
+      zIndex: 9998
     },
     drawerOpen: {
       width: drawerWidth,
@@ -80,6 +81,13 @@ export default function Layout({ children }: any) {
 
   return (
     <div className={classes.root}>
+      <main className={classes.mainContent}>
+        <Toolbar />
+        <Container maxWidth="xl">
+          { children }
+        </Container>
+      </main>
+
       <Drawer
         anchor="left" 
         open={drawerOpen} 
@@ -101,13 +109,6 @@ export default function Layout({ children }: any) {
         <Toolbar />
         <MainMenu />
       </Drawer>
-
-      <main className={classes.mainContent}>
-        <Toolbar />
-        <Container maxWidth="xl">
-          { children }
-        </Container>
-      </main>
 
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
