@@ -1,4 +1,4 @@
-import React, { FormEvent, useState, useEffect } from 'react';
+import React, { FormEvent, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -16,12 +16,6 @@ export default function SignIn() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-
-    signIn('credentials', {
-      email: email,
-      password: password,
-      callbackUrl: `${window.location.origin}/admin`
-    })
   }
 
   return (
@@ -43,6 +37,7 @@ export default function SignIn() {
             autoComplete="email"
             autoFocus
             onChange={ event => setEmail(event.target.value) }
+            value={email}
           />
           <TextField
             variant="filled"
@@ -55,6 +50,7 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             onChange={ event => setPassword(event.target.value) }
+            value={password}
           />
           <Button
             type="submit"

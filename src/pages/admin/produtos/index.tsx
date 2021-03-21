@@ -9,7 +9,7 @@ import ListaProdutos from './ListaProdutos';
 export default function Index() {  
   return (
     <>
-      <Box sx={{ my: 4 }} display="flex" justifyContent="space-between">
+      <Box my={4} display="flex" justifyContent="space-between">
         <Typography variant="h4" component="h1" color="primary">
           <FontAwesomeIcon size="lg" icon={faTshirt} />&nbsp;
           Produtos
@@ -31,7 +31,7 @@ export default function Index() {
         variant="filled"
       />
 
-      <Box sx={{ my: 4 }}>
+      <Box my={4}>
         <ListaProdutos></ListaProdutos>
       </Box>
     </>
