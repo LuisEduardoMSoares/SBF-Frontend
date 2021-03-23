@@ -31,9 +31,6 @@ export default function MyApp(props: AppProps) {
     }
   }, []);
 
-  const showLayout = () => {
-    return (<Layout><Component {...pageProps} /></Layout>);
-  }
 
   return (
     <CacheProvider value={cache}>
@@ -44,7 +41,7 @@ export default function MyApp(props: AppProps) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-          { showLayout() }
+        <Layout><Component {...pageProps} /></Layout>
       </ThemeProvider>
     </CacheProvider>
   );

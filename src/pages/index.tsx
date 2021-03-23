@@ -32,7 +32,7 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="E-mail"
             name="email"
             autoComplete="email"
             autoFocus
@@ -45,7 +45,7 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Senha'"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -59,17 +59,12 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Entrar
           </Button>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+                Esqueci minha senha
               </Link>
             </Grid>
           </Grid>

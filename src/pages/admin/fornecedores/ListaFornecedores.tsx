@@ -34,80 +34,56 @@ const StyledTableRow = withStyles((theme: Theme) =>
   }),
 )(TableRow);
 
-interface Product {
+interface Provider {
   id: number
-  title: string
-  quantity: number
-  size: string|number
-  categories?: string[]|null
-  subcategories?: string[]|null
+  name: string
+  contactName: string
+  email: string
+  document: string
+  phone: string
 }
 
-const rows: Product[] = [
+const rows: Provider[] = [
   {
     id: 1,
-    title: "Camisa Preta Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
+    name: "Cetunel Representante Comerciais e Agente",
+    contactName: "Aguinaldo Mota",
+    email: "aguinaldo@cetunel.com.br",
+    document: "00102612000195",
+    phone: "(43) 3028-1814"
   },
   {
     id: 2,
-    title: "Camisa Branca Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
+    name: "Rosa Clara Representante Comercial LTDA",
+    contactName: "Maria Rosa",
+    email: "maria.rosa@yahoo.com.br",
+    document: "00102612000195",
+    phone: "(43) 3028-1814"
   },
   {
     id: 3,
-    title: "Camisa Vermelha Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
+    name: "Braz Fornecedores",
+    contactName: "Augusto Oliveira",
+    email: "augustobrazoliv",
+    document: "00102612000195",
+    phone: "(43) 3028-1814"
   },
   {
     id: 4,
-    title: "Camisa Verde Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
+    name: "Componet Centro Fornecedor Comercial LTDA",
+    contactName: "José Batista Simião Neto",
+    email: "aguinaldo@cetunel.com.br",
+    document: "00102612000195",
+    phone: "(43) 3028-1814"
   },
   {
     id: 5,
-    title: "Camisa Preta Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
+    name: "Cetunel Representante Comerciais e Agente",
+    contactName: "Aguinaldo Mota",
+    email: "aguinaldo@cetunel.com.br",
+    document: "00102612000195",
+    phone: "(43) 3028-1814"
   },
-  {
-    id: 7,
-    title: "Camisa Branca Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 8,
-    title: "Camisa Preta Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 9,
-    title: "Camisa Branca Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  }
 ];
 
 const useStyles = makeStyles({
@@ -141,11 +117,11 @@ export default function CustomizedTables() {
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Produto</StyledTableCell>
-            <StyledTableCell align="center">Quantidade</StyledTableCell>
-            <StyledTableCell align="center">Tamanho</StyledTableCell>
-            <StyledTableCell align="center">Categoria(s)</StyledTableCell>
-            <StyledTableCell align="center">Subcategoria(s)</StyledTableCell>
+            <StyledTableCell>Nome do Fornecedor</StyledTableCell>
+            <StyledTableCell align="center">Responsável</StyledTableCell>
+            <StyledTableCell align="center">E-mail</StyledTableCell>
+            <StyledTableCell align="center">CNPJ</StyledTableCell>
+            <StyledTableCell align="center">Telefone</StyledTableCell>
             <StyledTableCell align="center">&nbsp;</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -153,12 +129,12 @@ export default function CustomizedTables() {
           {rows.map((row) => (
             <StyledTableRow key={row.id}>
               <StyledTableCell component="th" scope="row">
-                {row.title}
+                {row.name}
               </StyledTableCell>
-              <StyledTableCell align="center">{row.quantity}</StyledTableCell>
-              <StyledTableCell align="center">{row.size}</StyledTableCell>
-              <StyledTableCell align="center">{row.categories ? row.categories.join(', ') : "&nbsp;" }</StyledTableCell>
-              <StyledTableCell align="center">{row.subcategories ? row.subcategories.join(', ') : "&nbsp;" }</StyledTableCell>
+              <StyledTableCell align="center">{row.contactName}</StyledTableCell>
+              <StyledTableCell align="center">{row.email}</StyledTableCell>
+              <StyledTableCell align="center">{row.document }</StyledTableCell>
+              <StyledTableCell align="center">{row.phone }</StyledTableCell>
               <StyledTableCell align="right">
               <IconButton
                 aria-label="more"
