@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -7,15 +7,32 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Cookie from 'js-cookie';
+import { addDays } from 'date-fns';
+import { useRouter } from 'next/router';
 
 export default function SignIn() {
   const classes = useStyles();
+  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  async function handleSubmit(event: FormEvent) {
+  useEffect(() => {
+    const accessToken = Cookie.get('token')
+
+    if(accessToken) {
+      router.replace('/admin/')
+    }
+  })
+
+  async function handleSignIn(event: FormEvent) {
     event.preventDefault();
+
+    Cookie.set('token', 'custom-token-here', {
+      expires: addDays(new Date(), 1),
+    })
+    router.push('/admin/')
   }
 
   return (
@@ -25,7 +42,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h3">
           Gestão de Estoque
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+        <form className={classes.form} noValidate onSubmit={handleSignIn}>
           <TextField
             variant="filled"
             margin="normal"

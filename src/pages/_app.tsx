@@ -16,8 +16,6 @@ import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CS
 import { config as faConfig } from "@fortawesome/fontawesome-svg-core";
 faConfig.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 
-import Layout from 'components/Layout';
-
 export const cache = createCache({ key: 'css', prepend: true });
 
 export default function MyApp(props: AppProps) {
@@ -41,7 +39,7 @@ export default function MyApp(props: AppProps) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Layout><Component {...pageProps} /></Layout>
+        <Component {...pageProps} />
       </ThemeProvider>
     </CacheProvider>
   );

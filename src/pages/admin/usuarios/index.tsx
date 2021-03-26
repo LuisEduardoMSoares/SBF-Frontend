@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import withAuth from 'utils/withAuth';
 
-export default function Index() {
+function Usuarios() {
   return (
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
@@ -11,3 +12,5 @@ export default function Index() {
       </Box>
   );
 }
+
+export default withAuth(Usuarios);
