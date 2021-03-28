@@ -3,6 +3,8 @@ import { List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faHome, faSignOutAlt, faTruckMoving, faTshirt, faUsersCog } from '@fortawesome/free-solid-svg-icons';
 import Link from 'components/Link'
+import { useRouter } from 'next/router';
+import authService from 'services/authService';
 
 const menuList = [
   {
@@ -29,15 +31,17 @@ const menuList = [
     title: 'Usuários',
     icon: faUsersCog,
     link: '/admin/usuarios'
-  },
-  {
-    title: 'Sair',
-    icon: faSignOutAlt,
-    link: '/'
   }
 ];
 
 export default function MainMenu() {
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await authService.signOut()
+    router.replace('/')
+  }
+
   return (
     <>
       <List>
@@ -49,6 +53,12 @@ export default function MainMenu() {
             </ListItem>
             </Link>
           ))}
+          <Link href='' onClick={handleSignOut}>
+            <ListItem button>
+              <ListItemIcon><FontAwesomeIcon size="lg" icon={faSignOutAlt}></FontAwesomeIcon></ListItemIcon>
+              <ListItemText primary="Sair" />
+            </ListItem>
+          </Link>
         </List>
     </>
   )

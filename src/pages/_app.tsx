@@ -11,12 +11,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from 'theme';
 
+import MessagesProvider from 'contexts/messages';
+import Messages from 'components/messages'
+
 // Fontawesome imports
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config as faConfig } from "@fortawesome/fontawesome-svg-core";
 faConfig.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
-
-import Layout from 'components/Layout';
 
 export const cache = createCache({ key: 'css', prepend: true });
 
@@ -39,9 +40,12 @@ export default function MyApp(props: AppProps) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
+        <MessagesProvider>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Layout><Component {...pageProps} /></Layout>
+        <Component {...pageProps} />
+        <Messages />
+        </MessagesProvider>
       </ThemeProvider>
     </CacheProvider>
   );

@@ -5,8 +5,9 @@ import { Button, TextField } from '@material-ui/core';
 import { faTshirt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListaProdutos from './ListaProdutos';
+import withGuard from 'utils/withGuard';
 
-export default function Index() {  
+function Produtos() {  
   return (
     <>
       <Box my={4} display="flex" justifyContent="space-between">
@@ -37,3 +38,5 @@ export default function Index() {
     </>
   );
 }
+
+export default withGuard(Produtos)
