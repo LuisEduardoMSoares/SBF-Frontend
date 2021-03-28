@@ -5,7 +5,7 @@ import { Button, TextField } from '@material-ui/core';
 import { faTshirt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListaProdutos from './ListaProdutos';
-import withAuth from 'utils/withAuth';
+import withGuard from 'utils/withGuard';
 
 function Produtos() {  
   return (
@@ -39,4 +39,4 @@ function Produtos() {
   );
 }
 
-export default withAuth(Produtos)
+export default withGuard(Produtos)

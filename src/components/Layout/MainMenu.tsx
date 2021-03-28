@@ -5,6 +5,7 @@ import { faBox, faHome, faSignOutAlt, faTruckMoving, faTshirt, faUsersCog } from
 import Link from 'components/Link'
 import Cookie from 'js-cookie'
 import { useRouter } from 'next/router';
+import authService from 'services/authService';
 
 const menuList = [
   {
@@ -37,8 +38,8 @@ const menuList = [
 export default function MainMenu() {
   const router = useRouter();
 
-  function handleSignOut() {
-    Cookie.remove('token')
+  async function handleSignOut() {
+    await authService.signOut()
     router.replace('/')
   }
 

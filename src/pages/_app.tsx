@@ -11,6 +11,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from 'theme';
 
+import MessagesProvider from 'hooks/messages';
+
 // Fontawesome imports
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config as faConfig } from "@fortawesome/fontawesome-svg-core";
@@ -37,9 +39,11 @@ export default function MyApp(props: AppProps) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
+        <MessagesProvider>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <Component {...pageProps} />
+        </MessagesProvider>
       </ThemeProvider>
     </CacheProvider>
   );

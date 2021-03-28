@@ -5,7 +5,7 @@ import { Button, TextField } from '@material-ui/core';
 import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ComponentTable from 'components/Table';
-import withAuth from 'utils/withAuth';
+import withGuard from 'utils/withGuard';
 
 function Estoque() {  
   return (
@@ -39,4 +39,4 @@ function Estoque() {
   );
 }
 
-export default withAuth(Estoque)
+export default withGuard(Estoque)

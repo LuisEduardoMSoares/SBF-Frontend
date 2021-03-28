@@ -1,7 +1,7 @@
-import * as React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import withAuth from 'utils/withAuth';
+import * as React from 'react'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
+import withGuard from 'utils/withGuard';
 
 function Dashboard() {
   return (
@@ -13,4 +13,4 @@ function Dashboard() {
   );
 }
 
-export default withAuth(Dashboard);
+export default withGuard(Dashboard)

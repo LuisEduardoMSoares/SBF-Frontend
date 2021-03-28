@@ -5,7 +5,7 @@ import { Button, TextField } from '@material-ui/core';
 import { faTruckMoving } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListaFornecedores from './ListaFornecedores';
-import withAuth from 'utils/withAuth';
+import withGuard from 'utils/withGuard';
 
 function Fornecedores() {  
   return (
@@ -39,4 +39,4 @@ function Fornecedores() {
   );
 }
 
-export default withAuth(Fornecedores);
+export default withGuard(Fornecedores);
