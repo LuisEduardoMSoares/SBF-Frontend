@@ -3,7 +3,6 @@ import { List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faHome, faSignOutAlt, faTruckMoving, faTshirt, faUsersCog } from '@fortawesome/free-solid-svg-icons';
 import Link from 'components/Link'
-import Cookie from 'js-cookie'
 import { useRouter } from 'next/router';
 import authService from 'services/authService';
 

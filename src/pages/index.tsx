@@ -12,9 +12,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Cookie from 'js-cookie'
 
+import useMessages from 'hooks/useMessages';
+
 export default function SignIn() {
   const classes = useStyles();
   const router = useRouter();
+  const { showMessage } = useMessages();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,8 +33,15 @@ export default function SignIn() {
   async function handleSignIn(event: FormEvent) {
     event.preventDefault();
     
-    await authService.signIn(email, password);
-    router.replace("/admin/")
+    await authService.signIn(email, password)
+    .then(() => { router.replace("/admin/") })
+    .catch(error => {
+      showMessage({
+        type: 'error',
+        title: 'erro',
+        text: error.response.data.detail
+      })
+    })
   }
 
   return (
@@ -77,7 +87,7 @@ export default function SignIn() {
           >
             Entrar
           </Button>
-          
+
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

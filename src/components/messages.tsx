@@ -1,31 +1,44 @@
 import React from 'react';
-import useMessages from 'hooks/messages';
+import useMessages from 'hooks/useMessages';
 
-import 'styles/components/happy-message.scss';
+import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Alert } from '@material-ui/core';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      width:'100%',
+      position: 'absolute',
+      bottom: theme.spacing(2),
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+  }),
+);
 
 export default function Messages() {
-  const { isOpen, message, removeMessage } = useMessages();
+  const { isOpen, message, hideMessage } = useMessages();
+  const classes = useStyles();
 
   if(message?.timeout) {
-    setTimeout(removeMessage, message.timeout);
+    setTimeout(hideMessage, message.timeout);
   }
   
   return (
-    <div className={`happy-message ${isOpen ? 'happy-message-open' : 'happy-message-closed'} ${message?.type}`}>
-      <div className="happy-message-container">
-        <div className="happy-message-content">
-          <h3 className="happy-message-title">{message?.title}</h3>
-          <p className="happy-message-text">{message?.text}</p>
-
-          { message?.action }
-        </div>
-        <span
-          className={`happy-message-close button-messages-${message?.type}`}
-          onClick={removeMessage}
-        >
-          <FaWindowClose size={30} />
-        </span>
-      </div>
+    <div className={classes.container}>
+      {isOpen && (
+        <Alert 
+          action={
+            <Button color="inherit" size="small" onClick={hideMessage}>
+              close
+            </Button>
+          }
+          variant="filled" 
+          severity={message?.type}>
+          {message?.text}
+        </Alert>
+      )}
     </div>
   );
 }

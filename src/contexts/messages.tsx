@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from 'react';
-
 interface MessagesProps {
   message: MessagesDataProps | null;
   isOpen: boolean;
-  addMessage(messageObject:MessagesDataProps): void;
-  removeMessage(): any;
+  showMessage(messageObject:MessagesDataProps): void;
+  hideMessage(): any;
 }
+
+type messageType = 'error' | 'success' | 'warning' | 'info'
 interface MessagesDataProps {
-  type?: string;
+  type?: messageType;
   title?: string;
   text?: string;
   action?: object;
@@ -20,26 +21,25 @@ export default function MessagesProvider({ children }: any) {
   const [message, setMessage] = useState<MessagesDataProps | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  function addMessage(messageObject: MessagesDataProps) { 
+  function showMessage(messageObject: MessagesDataProps) { 
     setMessage(messageObject);
     setIsOpen(true);
   };
 
-  async function removeMessage() {
+  async function hideMessage() {
     setIsOpen(false);
-    await new Promise(resolve => {
-      setTimeout(() => {
-        resolve({})
-      }, 400);
-    });
-    setMessage(null);
+
+    // TODO: timeout pra excluir a mensagem sem dar erro (corrigir)
+    setTimeout(() => {
+      setMessage(null);
+    }, 400); 
   }
 
   const contextValue = {
     isOpen,
     message,
-    addMessage: useCallback((messageObject: MessagesDataProps) => { addMessage(messageObject) }, []),
-    removeMessage: useCallback(() => removeMessage(), []),
+    showMessage: useCallback((messageObject: MessagesDataProps) => { showMessage(messageObject) }, []),
+    hideMessage: useCallback(() => hideMessage(), []),
   }
 
   return (
