@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withStyles, Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Product from 'models/product'
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -34,82 +35,6 @@ const StyledTableRow = withStyles((theme: Theme) =>
   }),
 )(TableRow);
 
-interface Product {
-  id: number
-  title: string
-  quantity: number
-  size: string|number
-  categories?: string[]|null
-  subcategories?: string[]|null
-}
-
-const rows: Product[] = [
-  {
-    id: 1,
-    title: "Camisa Preta Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 2,
-    title: "Camisa Branca Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 3,
-    title: "Camisa Vermelha Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 4,
-    title: "Camisa Verde Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 5,
-    title: "Camisa Preta Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 7,
-    title: "Camisa Branca Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 8,
-    title: "Camisa Preta Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  },
-  {
-    id: 9,
-    title: "Camisa Branca Básica",
-    size: "M",
-    quantity: 20,
-    categories: ['Vestuário'],
-    subcategories: ['Camisetas', 'Moda Masculina']
-  }
-];
-
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
@@ -122,10 +47,10 @@ const options = [
   'Excluir'
 ];
 
-export default function CustomizedTables() {
+export default function CustomizedTables({list}: any) {
   const classes = useStyles();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -134,7 +59,7 @@ export default function CustomizedTables() {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
+  };  
 
   return (
     <TableContainer component={Paper}>
@@ -142,34 +67,34 @@ export default function CustomizedTables() {
         <TableHead>
           <TableRow>
             <StyledTableCell>Produto</StyledTableCell>
-            <StyledTableCell align="center">Quantidade</StyledTableCell>
             <StyledTableCell align="center">Tamanho</StyledTableCell>
-            <StyledTableCell align="center">Categoria(s)</StyledTableCell>
-            <StyledTableCell align="center">Subcategoria(s)</StyledTableCell>
+            <StyledTableCell align="center">Quantidade</StyledTableCell>
+            <StyledTableCell align="center">Peso</StyledTableCell>
+            <StyledTableCell align="center">Última Atualização</StyledTableCell>
             <StyledTableCell align="center">&nbsp;</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.id}>
+          {list.map((product: Product) => (
+            <StyledTableRow key={product.id}>
               <StyledTableCell component="th" scope="row">
-                {row.title}
+                {product.name}
               </StyledTableCell>
-              <StyledTableCell align="center">{row.quantity}</StyledTableCell>
-              <StyledTableCell align="center">{row.size}</StyledTableCell>
-              <StyledTableCell align="center">{row.categories ? row.categories.join(', ') : "&nbsp;" }</StyledTableCell>
-              <StyledTableCell align="center">{row.subcategories ? row.subcategories.join(', ') : "&nbsp;" }</StyledTableCell>
+              <StyledTableCell align="center">{product.size}</StyledTableCell>
+              <StyledTableCell align="center">{product.inventory}</StyledTableCell>
+              <StyledTableCell align="center">{product.weight ? product.weight : "-" }</StyledTableCell>
+              <StyledTableCell align="center">{product.metadatetime?.updated_on ? product.metadatetime?.updated_on : "-" }</StyledTableCell>
               <StyledTableCell align="right">
               <IconButton
                 aria-label="more"
-                aria-controls={`long-menu-${row.id}`}
+                aria-controls={`long-menu-${product.id}`}
                 aria-haspopup="true"
                 onClick={handleClick}
               >
                 <MoreVertIcon />
               </IconButton>
               <Menu
-                id={`long-menu-${row.id}`}
+                id={`long-menu-${product.id}`}
                 anchorEl={anchorEl}         
                 open={open}
                 onClose={handleClose}

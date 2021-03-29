@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
+import Router from 'next/router';
 
 // Cache
 import { CacheProvider } from '@emotion/react';
@@ -18,6 +19,13 @@ import Messages from 'components/messages'
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config as faConfig } from "@fortawesome/fontawesome-svg-core";
 faConfig.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
+
+import NProgress from 'nprogress'; //nprogress module
+import 'styles/nprogress.scss'; //styles of nprogress
+
+Router.events.on('routeChangeStart',() => NProgress.start())
+Router.events.on('routeChangeComplete',() => NProgress.done())
+Router.events.on('routeChangeError', () => NProgress.done())
 
 export const cache = createCache({ key: 'css', prepend: true });
 
