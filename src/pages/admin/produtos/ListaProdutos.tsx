@@ -47,7 +47,7 @@ const options = [
   'Excluir'
 ];
 
-export default function CustomizedTables({list}: any) {
+export default function ListaProdutos({list}: any) {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
