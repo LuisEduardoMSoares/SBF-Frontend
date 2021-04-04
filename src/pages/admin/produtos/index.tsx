@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic'
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Button, TextField } from '@material-ui/core';
@@ -8,10 +9,27 @@ import ListaProdutos from './ListaProdutos';
 import withGuard from 'utils/withGuard';
 import Product from 'models/product';
 import productService from 'services/productService';
+import useModal from 'hooks/useModal';
+
+const CadastroProdutos = dynamic(
+  () => import('components/produtos/cadastro'),
+  { ssr: false }
+)
 
 function Produtos() {
-
+  const { toggleModal } = useModal();
   const [productList, setProductList] = useState([] as Product[])
+
+  function insertProduct() {
+    toggleModal(
+      { 
+        content: (
+          <CadastroProdutos />
+        ),
+        title: 'Cadastro de Produtos'
+      }
+    )
+  }
 
   useEffect(() => {
     productService.list()
@@ -27,7 +45,7 @@ function Produtos() {
           <FontAwesomeIcon size="lg" icon={faTshirt} />&nbsp;
           Produtos
         </Typography>
-        <Button variant="contained" size="large" color="secondary">
+        <Button variant="contained" size="large" color="secondary" onClick={insertProduct}>
           + Adicionar Produto
         </Button>
       </Box>

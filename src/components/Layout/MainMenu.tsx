@@ -53,7 +53,7 @@ export default function MainMenu() {
             </ListItem>
             </Link>
           ))}
-          <Link href='' onClick={handleSignOut}>
+          <Link href='#' onClick={handleSignOut}>
             <ListItem button>
               <ListItemIcon><FontAwesomeIcon size="lg" icon={faSignOutAlt}></FontAwesomeIcon></ListItemIcon>
               <ListItemText primary="Sair" />
