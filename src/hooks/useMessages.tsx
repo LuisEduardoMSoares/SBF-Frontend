@@ -1,5 +1,5 @@
-import { MessagesContext } from 'contexts/messages';
 import { useContext } from 'react';
+import { MessagesContext } from 'contexts/messages';
 
 function useMessages() {
   const { message, isOpen, showMessage, hideMessage } = useContext(MessagesContext);

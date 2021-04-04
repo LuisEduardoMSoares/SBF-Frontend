@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { NextApiRequest } from 'next';
 
-const api = axios.create({ baseURL: process.env.API_URL })
+const api = axios.create({ baseURL: 'https://sbf-api.herokuapp.com/v1' })
 
 export function applyHeaders(req: NextApiRequest) {
   let authHeader = ''

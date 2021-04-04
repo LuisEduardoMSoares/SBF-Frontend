@@ -15,6 +15,10 @@ import theme from 'theme';
 import MessagesProvider from 'contexts/messages';
 import Messages from 'components/messages'
 
+//Modal
+import ModalProvider from 'contexts/modal';
+import Modal from 'components/modal';
+
 // Fontawesome imports
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config as faConfig } from "@fortawesome/fontawesome-svg-core";
@@ -49,10 +53,13 @@ export default function MyApp(props: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <MessagesProvider>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...pageProps} />
-          <Messages />
+          <ModalProvider>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+            <Messages />
+            <Modal />
+          </ModalProvider>
         </MessagesProvider>
       </ThemeProvider>
     </CacheProvider>

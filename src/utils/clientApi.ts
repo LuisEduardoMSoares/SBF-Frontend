@@ -2,7 +2,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import NProgress from 'nprogress';
 
-const api = axios.create({ baseURL: 'http://localhost:3000/api' })
+const api = axios.create({ baseURL: 'https://sbf-frontend.herokuapp.com/api' })
 
 api.interceptors.request.use(async (config) => {
   NProgress.start()

@@ -75,7 +75,7 @@ export default function ListaProdutos({list}: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list.map((product: Product) => (
+          {list && list.map((product: Product) => (
             <StyledTableRow key={product.id}>
               <StyledTableCell component="th" scope="row">
                 {product.name}
