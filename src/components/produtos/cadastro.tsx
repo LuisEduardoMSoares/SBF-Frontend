@@ -1,10 +1,12 @@
 import React, {FormEvent, useState} from 'react'
-import { Button, Container, createStyles, makeStyles, TextField, Theme, Typography } from '@material-ui/core'
+import { Button, Container, createStyles, InputAdornment, makeStyles, TextField, Theme, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
-import { faTshirt } from '@fortawesome/free-solid-svg-icons'
+import { faBan, faSave, faTshirt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useModal from 'hooks/useModal';
 import Swal from 'sweetalert2';
+import Product from 'models/product';
+import productService from 'services/productService';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,24 +29,41 @@ export default function CadastroProdutos() {
   const classes = useStyles()
   const { toggleModal } = useModal()
 
-  function handleSubmit($event: FormEvent) {
+  const formChanged = name || inventory || size || weight
+
+  async function handleSubmit($event: FormEvent) {
     $event.preventDefault();
 
-    console.log("Cadastrar")
+    const newProduct:Product = {
+      name,
+      inventory,
+      size,
+      weight
+    }
+
+    await productService.insert(newProduct);
+
+    Swal.fire({
+      text: 'Produto inserido com sucesso!'
+    })
+    toggleModal({})
   }
 
   function handleCancel() {
-    Swal.fire({
-      showCancelButton: true,
-      title: "Cancelar Cadastro",
-      text: "Tem certeza de que deseja cancelar suas alterações?",
-      icon: "warning",
-      cancelButtonText: 'Não, voltar ao formulário',
-      confirmButtonText: 'Sim, cancelar alterações',
-      confirmButtonColor: '#FF0000',
-    }).then((result: any) => {
-      if (result.isConfirmed) toggleModal({})
-    })
+    if(formChanged) {
+      Swal.fire({
+        showCancelButton: true,
+        title: "Cancelar Cadastro",
+        text: "Tem certeza de que deseja cancelar suas alterações?",
+        icon: "warning",
+        cancelButtonText: 'Não, voltar ao formulário',
+        confirmButtonText: 'Sim, descartar alterações',
+        confirmButtonColor: '#FF0000',
+        cancelButtonColor: '#556cd6',
+      }).then((result: any) => {
+        if (result.isConfirmed) toggleModal({})
+      })
+    } else toggleModal({})
   }
 
   return (
@@ -63,6 +82,7 @@ export default function CadastroProdutos() {
             id="name"
             label="Nome do Produto"
             name="name"
+            autoComplete="off"
             autoFocus
             onChange={ event => setName(event.target.value) }
             value={name}
@@ -76,7 +96,7 @@ export default function CadastroProdutos() {
             id="size"
             label="Tamanho"
             name="size"
-            autoFocus
+            autoComplete="off"
             onChange={ event => setSize(event.target.value) }
             value={size}
           />
@@ -90,7 +110,7 @@ export default function CadastroProdutos() {
             id="inventory"
             label="Quantidade"
             name="inventory"
-            autoFocus
+            autoComplete="off"
             onChange={ event => setInventory(parseFloat(event.target.value)) }
             value={inventory}
           />
@@ -104,9 +124,12 @@ export default function CadastroProdutos() {
             id="weight"
             label="Peso (kg)"
             name="weight"
-            autoFocus
-            onChange={ event => setWeight(parseFloat(event.target.value)) }
+            autoComplete="off"
+            onChange={ event => setWeight(event.target.value ? parseFloat(event.target.value) < 0 ? 0 : parseFloat(event.target.value) : 0) }
             value={weight}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
+            }}
           />
 
           <Grid
@@ -117,12 +140,14 @@ export default function CadastroProdutos() {
             className={classes.formActions}
           >
             <Grid item xs={3}>
-              <Button color="secondary" onClick={handleCancel}>
+              <Button size="large" color="secondary" onClick={handleCancel}>
+                <FontAwesomeIcon icon={faBan} />&nbsp;
                 Cancelar
               </Button>
             </Grid>
-            <Grid item xs={3}>
-              <Button variant="contained" color="primary" type="submit">
+            <Grid item xs={4}>
+              <Button variant="contained" size="large" color="secondary" type="submit">
+                <FontAwesomeIcon icon={faSave} /> &nbsp; 
                 Cadastrar
               </Button>
             </Grid>
