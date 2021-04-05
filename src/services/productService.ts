@@ -11,6 +11,14 @@ const productService = {
     } catch(error) {
       console.error(error)
     }
+  },
+  
+  async insert(product: Product) {
+    try {
+      await api.post('/products', product)
+    } catch(error) {
+      console.error(error)
+    }
   }
 }
 
