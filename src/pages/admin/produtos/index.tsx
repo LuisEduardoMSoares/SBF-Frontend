@@ -11,12 +11,12 @@ import productService from 'services/productService';
 import useModal from 'hooks/useModal';
 
 const Lista = dynamic(
-  () => import('components/Produtos/Lista'),
+  () => import('components/produtos/Lista'),
   { ssr: false }
 )
 
 const Cadastro = dynamic(
-  () => import('components/Produtos/Cadastro'),
+  () => import('components/produtos/Cadastro'),
   { ssr: false }
 )
 
