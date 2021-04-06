@@ -11,7 +11,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
-      zIndex: 10000,
+      zIndex: 999,
     },
     root: {
       display: 'flex',
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
       overflowX: 'hidden',
       position: 'fixed',
-      zIndex: 9998
+      zIndex: 998
     },
     drawerOpen: {
       width: drawerWidth,

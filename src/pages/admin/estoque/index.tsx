@@ -5,8 +5,9 @@ import { Button, TextField } from '@material-ui/core';
 import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ComponentTable from 'components/Table';
+import withGuard from 'utils/withGuard';
 
-export default function Index() {  
+function Estoque() {  
   return (
     <>
       <Box my={4} display="flex" justifyContent="space-between">
@@ -37,3 +38,5 @@ export default function Index() {
     </>
   );
 }
+
+export default withGuard(Estoque)

@@ -1,4 +1,7 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import authService from 'services/authService';
+
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -7,15 +10,38 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Cookie from 'js-cookie'
+
+import useMessages from 'hooks/useMessages';
 
 export default function SignIn() {
   const classes = useStyles();
+  const router = useRouter();
+  const { showMessage } = useMessages();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  async function handleSubmit(event: FormEvent) {
+  useEffect(() => {
+    const accessToken = Cookie.get('token')
+
+    if(accessToken) {
+      router.replace("/admin/")
+    }
+  })
+
+  async function handleSignIn(event: FormEvent) {
     event.preventDefault();
+    
+    await authService.signIn(email, password)
+    .then(() => { router.replace("/admin/") })
+    .catch(error => {
+      showMessage({
+        type: 'error',
+        title: 'erro',
+        text: error.response.data.detail
+      })
+    })
   }
 
   return (
@@ -25,14 +51,14 @@ export default function SignIn() {
         <Typography component="h1" variant="h3">
           Gestão de Estoque
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+        <form className={classes.form} noValidate onSubmit={handleSignIn}>
           <TextField
             variant="filled"
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="E-mail"
             name="email"
             autoComplete="email"
             autoFocus
@@ -45,7 +71,7 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Senha'"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -59,17 +85,13 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Entrar
           </Button>
+
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+                Esqueci minha senha
               </Link>
             </Grid>
           </Grid>
@@ -85,10 +107,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.

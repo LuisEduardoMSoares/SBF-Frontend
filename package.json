@@ -14,10 +14,16 @@
         "@material-ui/icons": "^4.11.2",
         "axios": "^0.21.1",
         "clsx": "^1.1.1",
+        "date-fns": "^2.19.0",
+        "js-cookie": "^2.2.1",
         "next": "^10.0.9",
+        "nprogress": "^0.2.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
-        "react-router-dom": "^5.2.0"
+        "react-router-dom": "^5.2.0",
+        "sass": "^1.32.8",
+        "sweetalert2": "^10.15.7",
+        "swr": "^0.5.4"
     },
     "scripts": {
         "dev": "next",
@@ -27,7 +33,9 @@
     },
     "devDependencies": {
         "@types/axios": "latest",
+        "@types/js-cookie": "^2.2.6",
         "@types/node": "^14.14.35",
+        "@types/nprogress": "^0.2.0",
         "@types/react": "latest",
         "@types/react-dom": "latest",
         "@types/react-router-dom": "latest",

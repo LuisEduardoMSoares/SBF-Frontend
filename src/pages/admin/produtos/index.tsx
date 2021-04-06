@@ -1,12 +1,47 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic'
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Button, TextField } from '@material-ui/core';
 import { faTshirt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ListaProdutos from './ListaProdutos';
+import withGuard from 'utils/withGuard';
+import Product from 'models/product';
+import productService from 'services/productService';
+import useModal from 'hooks/useModal';
 
-export default function Index() {  
+const Lista = dynamic(
+  () => import('components/produtos/Lista'),
+  { ssr: false }
+)
+
+const Cadastro = dynamic(
+  () => import('components/produtos/Cadastro'),
+  { ssr: false }
+)
+
+function Produtos() {
+  const { toggleModal } = useModal();
+  const [productList, setProductList] = useState([] as Product[])
+
+  function insertProduct() {
+    toggleModal(
+      { 
+        title: "Cadastro de Produto",
+        content: (
+          <Cadastro />
+        )
+      }
+    )
+  }
+
+  useEffect(() => {
+    productService.list()
+    .then(response => {
+      if(response) setProductList(response)
+    })
+  }, [])
+
   return (
     <>
       <Box my={4} display="flex" justifyContent="space-between">
@@ -14,7 +49,7 @@ export default function Index() {
           <FontAwesomeIcon size="lg" icon={faTshirt} />&nbsp;
           Produtos
         </Typography>
-        <Button variant="contained" size="large" color="secondary">
+        <Button variant="contained" size="large" color="secondary" onClick={insertProduct}>
           + Adicionar Produto
         </Button>
       </Box>
@@ -32,8 +67,10 @@ export default function Index() {
       />
 
       <Box my={4}>
-        <ListaProdutos></ListaProdutos>
+        <Lista list={productList}></Lista>
       </Box>
     </>
   );
 }
+
+export default withGuard(Produtos)
