@@ -1,10 +1,12 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import NProgress from 'nprogress';
+import Cookie from 'js-cookie'
 
-const api = axios.create({ baseURL: 'https://sbf-frontend.herokuapp.com/api' })
+const api = axios.create({ baseURL: 'https://sbf-frontend.herokuapp.com/api/' })
 
 api.interceptors.request.use(async (config) => {
+  config.headers.Authorization =  `Bearer ${Cookie.get('accessToken')}`;
   NProgress.start()
   return config
 }, (error) => {
