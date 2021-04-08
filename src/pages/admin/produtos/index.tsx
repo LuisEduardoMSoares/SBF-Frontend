@@ -38,7 +38,7 @@ function Produtos() {
   useEffect(() => {
     productService.list()
     .then(response => {
-      if(response) setProductList(response)
+      if(response) setProductList(response.records)
     })
   }, [])
 
