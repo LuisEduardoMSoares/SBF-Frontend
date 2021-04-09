@@ -4,7 +4,7 @@ import { addDays } from 'date-fns'
 
 const authService = {
   async signIn(username: string, password: string) {
-    const result = await api.post('/auth/login', {
+    const result = await api.post('/login', {
       username,
       password
     })

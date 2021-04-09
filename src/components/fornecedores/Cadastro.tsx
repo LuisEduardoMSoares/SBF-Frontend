@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function CadastroFornecedor() {
   const [ name, setName ] = useState<string>('')
   const [ cnpj, setCnpj ] = useState<string>('')
-  const [ phoneNumber, setPhoneNumber ] = useState<number>(0)
+  const [ phoneNumber, setPhoneNumber ] = useState<string>('')
   const [ email, setEmail ] = useState<string>('')
   const [ contactName, setContactName ] = useState<string>('')
 
@@ -38,9 +38,9 @@ export default function CadastroFornecedor() {
     const newProvider: Provider = {
       name,
       cnpj,
-      phone_number,
+      phone_number: phoneNumber,
       email,
-      contact_name
+      contact_name: contactName
     }
 
     await providerService.insert(newProvider);
