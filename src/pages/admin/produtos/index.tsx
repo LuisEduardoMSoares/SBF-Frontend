@@ -11,7 +11,7 @@ import productService from 'services/productService';
 import useModal from 'hooks/useModal';
 
 const Lista = dynamic(
-  () => import('components/produtos/Lista'),
+  () => import('components/produtos/Lista/index'),
   { ssr: false }
 )
 
@@ -22,25 +22,43 @@ const Cadastro = dynamic(
 
 function Produtos() {
   const { toggleModal } = useModal();
-  const [productList, setProductList] = useState([] as Product[])
+  const [ productList, setProductList ] = useState([] as Product[]);
 
-  function insertProduct() {
+  useEffect(() => {
+    productService.list()
+    .then(response => {
+      if(response) setProductList(response)
+    })
+  }, [])
+
+  function handleProductAdd() {
     toggleModal(
       { 
         title: "Cadastro de Produto",
         content: (
           <Cadastro />
-        )
+        ),
+        route: 'add'
       }
     )
   }
 
-  useEffect(() => {
-    productService.list()
-    .then(response => {
-      if(response) setProductList(response.records)
-    })
-  }, [])
+  function handleProductUpdate(product: Product) {
+    toggleModal(
+      { 
+        title: "Cadastro de Produto",
+        content: (
+          <Cadastro />
+        ),
+        route: `update/${product.id}`,
+        params: { ProductId: product.id }
+      }
+    )
+  }
+
+  function handleProductDelete(product: Product) {
+    console.log('productDeleteCalled', product)
+  }
 
   return (
     <>
@@ -49,7 +67,7 @@ function Produtos() {
           <FontAwesomeIcon size="lg" icon={faTshirt} />&nbsp;
           Produtos
         </Typography>
-        <Button variant="contained" size="large" color="secondary" onClick={insertProduct}>
+        <Button variant="contained" size="large" color="secondary" onClick={handleProductAdd}>
           + Adicionar Produto
         </Button>
       </Box>
@@ -67,7 +85,7 @@ function Produtos() {
       />
 
       <Box my={4}>
-        <Lista list={productList}></Lista>
+        <Lista list={productList} handleProductUpdate={handleProductUpdate} handleProductDelete={handleProductDelete}></Lista>
       </Box>
     </>
   );

@@ -6,7 +6,7 @@ const productService = {
     let productList:Product[] = []
     try {
       const result = await api.get('/products')
-      productList = result.data
+      productList = result.data.records
       return productList
     } catch(error) {
       console.error(error)

@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from 'react'
+import React, {FormEvent, useEffect, useState} from 'react'
 import { Button, Container, createStyles, InputAdornment, makeStyles, TextField, Theme, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
 import { faBan, faSave, faTshirt } from '@fortawesome/free-solid-svg-icons'
@@ -7,6 +7,7 @@ import useModal from 'hooks/useModal';
 import Swal from 'sweetalert2';
 import Product from 'models/product';
 import productService from 'services/productService';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,12 +27,16 @@ export default function CadastroProdutos() {
   const [ inventory, setInventory ] = useState<number>(0)
   const [ weight, setWeight ] = useState<number>(0)
 
+  const router = useRouter();
+
   const classes = useStyles()
   const { toggleModal } = useModal()
 
-  const formChanged = name || inventory || size || weight
+  const isFormDirty = name || inventory || size || weight
 
-  async function handleSubmit($event: FormEvent) {
+  console.log(router.query.ProductId)
+
+  async function handleProductSubmit($event: FormEvent) {
     $event.preventDefault();
 
     const newProduct:Product = {
@@ -50,7 +55,7 @@ export default function CadastroProdutos() {
   }
 
   function handleCancel() {
-    if(formChanged) {
+    if(isFormDirty) {
       Swal.fire({
         showCancelButton: true,
         title: "Cancelar Cadastro",
@@ -73,7 +78,7 @@ export default function CadastroProdutos() {
           <FontAwesomeIcon icon={faTshirt} /> { !name ? 'Cadastro de Produto' : name }
         </Typography>
 
-        <form noValidate onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleProductSubmit}>
           <TextField
             variant="filled"
             margin="normal"
