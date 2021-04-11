@@ -1,5 +1,5 @@
 import React, {FormEvent, useState} from 'react'
-import { Button, Container, createStyles, InputAdornment, makeStyles, TextField, Theme, Typography } from '@material-ui/core'
+import { Button, Container, createStyles, makeStyles, TextField, Theme, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
 import { faBan, faSave, faTshirt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -152,13 +152,13 @@ export default function CadastroFornecedor() {
             className={classes.formActions}
           >
             <Grid item xs={3}>
-              <Button cnpj="large" color="secondary" onClick={handleCancel}>
+              <Button size="large" color="secondary" onClick={handleCancel}>
                 <FontAwesomeIcon icon={faBan} />&nbsp;
                 Cancelar
               </Button>
             </Grid>
             <Grid item xs={4}>
-              <Button variant="contained" cnpj="large" color="secondary" type="submit">
+              <Button variant="contained" size="large" color="secondary" type="submit">
                 <FontAwesomeIcon icon={faSave} /> &nbsp; 
                 Cadastrar
               </Button>

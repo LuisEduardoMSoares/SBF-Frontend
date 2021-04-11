@@ -52,19 +52,21 @@ export interface ContextMenuOption {
 
 export default function ListaProdutos({
   list,
-  handleProductUpdate,
-  handleProductDelete
+  productChange,
+  productMove,
+  productDelete,
 }: {
   list: Product[];
-  handleProductUpdate: Function
-  handleProductDelete: Function
+  productChange: Function;
+  productMove: Function;
+  productDelete: Function;
 }) {
   const classes = useStyles();
 
   const options: ContextMenuOption[] = [
-    { title: "Alterar", action: handleProductUpdate },
-    { title: "Entrada/Saída" },
-    { title: "Excluir", action: handleProductDelete },
+    { title: "Alterar", action: productChange },
+    { title: "Entrada/Saída", action: productMove },
+    { title: "Excluir", action: productDelete },
   ];
 
   return (
@@ -100,10 +102,7 @@ export default function ListaProdutos({
                     : "-"}
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <ContextMenu
-                    product={product}
-                    menuOptions={options}
-                  />
+                  <ContextMenu product={product} menuOptions={options} />
                 </StyledTableCell>
               </StyledTableRow>
             ))}

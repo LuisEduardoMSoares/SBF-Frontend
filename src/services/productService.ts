@@ -1,25 +1,46 @@
-import Product from 'models/product';
-import api from 'utils/clientApi'
+import Product from "models/product";
+import api from "utils/clientApi";
 
 const productService = {
-  async list() {
-    let productList:Product[] = []
+  async list(): Promise<Product[]> {
+    let productList: Product[] = [];
     try {
-      const result = await api.get('/products')
-      productList = result.data.records
-      return productList
-    } catch(error) {
-      console.error(error)
+      const result = await api.get("/products");
+      productList = result.data.records;
+      return productList;
+    } catch (error) {
+      throw new Error(error);
     }
   },
-  
-  async insert(product: Product) {
-    try {
-      await api.post('/products', product)
-    } catch(error) {
-      console.error(error)
-    }
-  }
-}
 
-export default productService
+  async getOne(productId: number): Promise<Product> {
+    try {
+      const result = await api.get<Product>(`/products/${productId}`);
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  async save(product: Product): Promise<Product> {
+    try {
+      const newProduct: Product = product.id
+        ? await api.patch(`/products/${product.id}`, product)
+        : await api.post("/products", product);
+      return newProduct;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  async delete(product: Product) {
+    try {
+      if (product.id) await api.patch(`/products/${product.id}`, product);
+      else await api.post("/products", product);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+};
+
+export default productService;

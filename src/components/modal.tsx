@@ -50,7 +50,8 @@ export default function Modal() {
   };
 
   return (
-    isModalOpen && (
+    <>
+    { isModalOpen && (
       <div>
         <Dialog
           open={isModalOpen}
@@ -78,6 +79,7 @@ export default function Modal() {
           </DialogContent>
         </Dialog>
       </div>
-    )
+    )}
+    </>
   )
 }

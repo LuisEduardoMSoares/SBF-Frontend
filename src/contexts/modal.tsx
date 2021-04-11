@@ -1,5 +1,4 @@
 import { useContextualRouting } from "hooks/useContextualRouting";
-import { set } from "js-cookie";
 import { useRouter } from "next/router";
 import React, {useCallback, useEffect, useState} from "react";
 
@@ -34,9 +33,9 @@ export default function ModalProvider({ children }: any) {
     setModalOpen(isModalOpen => !isModalOpen)
     setModalContent(content)
     setModalTitle(title)
-    setModalRoute(route);
-    setModalParams(params);
-  };
+    setModalRoute(route)
+    setModalParams(params)
+  }
 
   const contextValue = {
     isModalOpen,
@@ -48,10 +47,11 @@ export default function ModalProvider({ children }: any) {
   }
 
   useEffect(() => {
+    console.log(isModalOpen ? "Modal opened" : "Modal Closed")
     router.push(
       makeContextualHref(modalParams), modalRoute ? `${returnHref}/${modalRoute}` : `${returnHref}` ,{shallow: true}
     )
-  }, [modalRoute])
+  },[isModalOpen])
 
   return (
     <ModalContext.Provider value={contextValue}>
