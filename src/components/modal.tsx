@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Modal() {
-  const { modal, modalTitle, modalContent, toggleModal } = useModal();
+  const { isModalOpen, modalTitle, modalContent, toggleModal } = useModal();
 
   const classes = useStyles();
 
@@ -50,10 +50,11 @@ export default function Modal() {
   };
 
   return (
-    modal && (
+    <>
+    { isModalOpen && (
       <div>
         <Dialog
-          open={modal}
+          open={isModalOpen}
           onClose={handleClose}
           scroll="paper"
           aria-labelledby="scroll-dialog-title"
@@ -78,6 +79,7 @@ export default function Modal() {
           </DialogContent>
         </Dialog>
       </div>
-    )
+    )}
+    </>
   )
 }

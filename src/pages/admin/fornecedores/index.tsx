@@ -38,7 +38,7 @@ function Produtos() {
   useEffect(() => {
     providerService.list()
     .then(response => {
-      if(response) setProviderList(response.records)
+      if(response) setProviderList(response)
     })
   }, [])
 

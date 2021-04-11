@@ -2,6 +2,6 @@ import { ModalContext } from "contexts/modal";
 import { useContext } from "react";
 
 export default function useModal(){
-  const { modal, toggleModal, modalContent, modalTitle } = useContext(ModalContext)
-  return { modal, toggleModal, modalContent, modalTitle };
+  const { isModalOpen, toggleModal, modalContent, modalTitle, modalRoute, modalParams } = useContext(ModalContext)
+  return { isModalOpen, toggleModal, modalContent, modalTitle, modalRoute, modalParams };
 };

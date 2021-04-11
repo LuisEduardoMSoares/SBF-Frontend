@@ -18,18 +18,5 @@ export default function withGuard(WrappedComponent:any) {
     return <Layout><WrappedComponent {...props} /></Layout>
   }
 
-  /* Wrapper.getInitialProps = async (context: any) => {
-
-    const props = WrappedComponent.getInitialProps && await WrappedComponent.getInitialProps(context);
-
-    const accessToken = context.req?.headers?.cookie?.replace('accessToken=', '')
-
-    if(!accessToken) {
-      context.res?.writeHead(301, {Location: '/'}).end()
-    }
-
-    return {...props}
-  } */
-
   return Wrapper
 }

@@ -19,6 +19,7 @@
         "js-cookie": "^2.2.1",
         "next": "^10.0.9",
         "nprogress": "^0.2.0",
+        "qs-stringify": "^1.2.1",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "react-router-dom": "^5.2.0",
@@ -43,6 +44,6 @@
         "typescript": "latest"
     },
     "engines": {
-        "node": "12.4"
+        "node": ">=12.4"
     }
 }
