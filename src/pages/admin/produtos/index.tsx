@@ -9,6 +9,7 @@ import withGuard from "utils/withGuard";
 import Product from "models/product";
 import productService from "services/productService";
 import useModal from "hooks/useModal";
+import Swal from "sweetalert2";
 
 const ProductList = dynamic(() => import("components/produtos/Lista"));
 
@@ -16,7 +17,7 @@ const ProductForm = dynamic(() => import("components/produtos/Cadastro"));
 
 function Produtos() {
   const { toggleModal } = useModal();
-  const [ productList, setProductList ] = useState([] as Product[]);
+  const [productList, setProductList] = useState([] as Product[]);
 
   useEffect(() => {
     productService.list().then((response: Product[]) => {
@@ -37,7 +38,31 @@ function Produtos() {
     console.log("productMoveCalled", product);
   }
 
-  function handleProductDelete(product: Product) {
+  async function handleProductDelete(product: Product) {
+    await Swal.fire({
+      showCancelButton: true,
+      title: "Excluir Cadastro?",
+      html:
+        `Tem certeza de que deseja excluir <b>${product.name} (${product.size})</b>? Não será possível desfazer essa ação!</b>`,
+      icon: "question",
+      cancelButtonText: "Não",
+      confirmButtonText: "Sim, excluir cadastro",
+      confirmButtonColor: "#FF0000",
+      cancelButtonColor: "#556cd6",
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        productService
+          .delete(product)
+          .then((_response) => {
+            Swal.fire({
+              title: "Sucesso!",
+              html: `<b>${product.name} (${product.size})</b> excluído com sucesso!`,
+              icon: "success",
+            });
+          })
+          .catch(console.error);
+      }
+    });
     console.log("productDeleteCalled", product);
   }
 

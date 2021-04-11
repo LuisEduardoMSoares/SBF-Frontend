@@ -26,19 +26,18 @@ const productService = {
     try {
       const newProduct: Product = product.id
         ? await api.patch(`/products/${product.id}`, product)
-        : await api.post("/products", product);
-      return newProduct;
+        : await api.post("/products", product)
+      return newProduct
     } catch (error) {
-      throw new Error(error);
+      throw new Error(error)
     }
   },
 
-  async delete(product: Product) {
+  async delete(product: Product):Promise<Product> {
     try {
-      if (product.id) await api.patch(`/products/${product.id}`, product);
-      else await api.post("/products", product);
+      return await api.delete(`/products/${product.id}`)
     } catch (error) {
-      console.error(error);
+      throw new Error(error)
     }
   },
 };

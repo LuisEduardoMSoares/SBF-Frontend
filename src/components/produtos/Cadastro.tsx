@@ -76,20 +76,38 @@ export default function CadastroProdutos() {
   async function handleProductSave($event: FormEvent) {
     $event.preventDefault();
 
-    const newProduct: Product = {
-      id: productId,
-      name,
-      inventory,
-      size,
-      weight,
-    };
+    if(isFormChanged) {
 
-    await productService.save(newProduct);
+      const newProduct: Product = {
+        id: productId,
+        name,
+        inventory,
+        size,
+        weight,
+      };
 
-    Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
-    toggleModal({})
+      await productService.save(newProduct);
 
-    router.push('/admin/produtos',undefined,{shallow: true})
+      //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
+      Swal.fire({
+        title: "Sucesso!", 
+        html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
+        icon: "success"
+      });
+
+      toggleModal({})
+
+      router.push('/admin/produtos',undefined,{shallow: true})
+    } else {
+      Swal.fire({
+        text: "Nada foi alterado",
+        position: "bottom",
+        timer: 2500,
+        showConfirmButton: false,
+        toast: true
+      })
+      toggleModal({})
+    }
   }
 
   async function handleCancel() {
