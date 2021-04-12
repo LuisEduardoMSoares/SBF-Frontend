@@ -6,7 +6,7 @@ const providerService = {
     let providerList:Provider[] = []
     try {
       const result = await api.get('/providers')
-      providerList = result.data
+      providerList = result.data.records
       return providerList
     } catch(error) {
       console.error(error)

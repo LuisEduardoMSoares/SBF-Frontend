@@ -180,13 +180,13 @@ export default function CadastroFornecedor() {
             className={classes.formActions}
           >
             <Grid item xs={3}>
-              <Button cnpj="large" color="secondary" onClick={handleCancel}>
+              <Button size="large" color="secondary" onClick={handleCancel}>
                 <FontAwesomeIcon icon={faBan} />&nbsp;
                 Cancelar
               </Button>
             </Grid>
             <Grid item xs={4}>
-              <Button variant="contained" cnpj="large" color="secondary" type="submit">
+              <Button variant="contained" size="large" color="secondary" type="submit">
                 <FontAwesomeIcon icon={faSave} /> &nbsp; 
                 Cadastrar
               </Button>
