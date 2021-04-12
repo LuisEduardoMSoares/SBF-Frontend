@@ -1,5 +1,5 @@
 import React, {FormEvent, useState} from 'react'
-import { Button, Container, createStyles, InputAdornment, makeStyles, TextField, Theme, Typography } from '@material-ui/core'
+import { Alert, Button, Container, createStyles, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, InputAdornment, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
 import { faBan, faSave, faTshirt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,6 +7,10 @@ import useModal from 'hooks/useModal';
 import Swal from 'sweetalert2';
 import Provider from 'models/provider';
 import providerService from 'services/providerService';
+import {cnpj as cnpjValidator} from 'cpf-cnpj-validator';
+import MuiAlert from '@material-ui/lab/Alert';
+import {emailValidator} from 'utils/functions'
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,6 +30,8 @@ export default function CadastroFornecedor() {
   const [ phoneNumber, setPhoneNumber ] = useState<string>('')
   const [ email, setEmail ] = useState<string>('')
   const [ contactName, setContactName ] = useState<string>('')
+  const [ message, setMessage ] = useState<string>('');
+  const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
   const classes = useStyles()
   const { toggleModal } = useModal()
@@ -68,8 +74,14 @@ export default function CadastroFornecedor() {
     } else toggleModal({})
   }
 
+
   return (
     <>
+      <Snackbar open={isOpen} autoHideDuration={10000} >
+        <Alert severity="error">
+          {message}
+        </Alert>
+      </Snackbar>
       <Container max-width="ls">
         <Typography variant="h4" component="h1" color="primary" className={classes.formTitle}>
           <FontAwesomeIcon icon={faTshirt} /> { !name ? 'Cadastro de Fornecedor' : name }
@@ -115,6 +127,14 @@ export default function CadastroFornecedor() {
             autoComplete="off"
             onChange={ event => setEmail(event.target.value) }
             value={email}
+            onBlur={event => {
+              if (emailValidator(event.target.value)) {
+                setIsOpen(false);
+              } else {
+                setMessage('Atenção, E-mail inválido');
+                setIsOpen(true);
+              }
+            }}
           />
 
           <TextField
@@ -128,6 +148,14 @@ export default function CadastroFornecedor() {
             name="cnpj"
             autoComplete="off"
             onChange={ event => setCnpj(event.target.value) }
+            onBlur={event => {
+              if (!cnpjValidator.isValid(event.target.value)) {
+                setIsOpen(true);
+                setMessage('Atenção, CNPJ inválido');
+              } else {
+                setIsOpen(false);
+              }
+            }}
             value={cnpj}
           />
           <TextField

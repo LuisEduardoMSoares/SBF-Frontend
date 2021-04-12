@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Provider from 'models/provider'
 
@@ -49,6 +49,8 @@ const options = [
 
 export default function ListaProdutos({list}: any) {
   const classes = useStyles();
+  const [ isOpenConfirmation, setIsOpenConfirmation ] = useState<boolean>(false);
+  const [ providerSelected, setProviderSelected ] = useState<number>();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -61,7 +63,37 @@ export default function ListaProdutos({list}: any) {
     setAnchorEl(null);
   };  
 
+
+  function deleteProvider() {
+    console.log('Excluir fornecedor ' + providerSelected);
+  }
+
   return (
+    <>
+
+    <div>
+      <Dialog
+        open={isOpenConfirmation}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirmação de exclusão"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Tem certeza que deseja excluir o cadastro desse fornecedor {providerSelected}?.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsOpenConfirmation(false)} color="primary">
+            Não
+          </Button>
+          <Button onClick={deleteProvider} color="primary" autoFocus>
+            Sim
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
@@ -108,8 +140,13 @@ export default function ListaProdutos({list}: any) {
                   elevation: 0
                 }}
               >
-                {options.map((option) => (
-                  <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
+                {options.map((option, index) => (
+                  <MenuItem key={option} selected={option === 'Pyxis'} onClick={() => {
+                    if (index === 2) {
+                      setProviderSelected(provider.id);
+                      setIsOpenConfirmation(true);
+                    }
+                  }}>
                     {option}
                   </MenuItem>
                 ))}
@@ -120,5 +157,6 @@ export default function ListaProdutos({list}: any) {
         </TableBody>
       </Table>
     </TableContainer>
+    </>
   );
 }
