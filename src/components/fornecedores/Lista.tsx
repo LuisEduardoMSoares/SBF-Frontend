@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Provider from 'models/provider'
+import providerService from 'services/providerService';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +48,7 @@ const options = [
   'Excluir'
 ];
 
-export default function ListaProdutos({list}: any) {
+export default function ListaFornecedores({list}: any) {
   const classes = useStyles();
   const [ isOpenConfirmation, setIsOpenConfirmation ] = useState<boolean>(false);
   const [ providerSelected, setProviderSelected ] = useState<number>();
@@ -55,8 +56,9 @@ export default function ListaProdutos({list}: any) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>, providerId: number) => {
     setAnchorEl(event.currentTarget);
+    setProviderSelected(providerId);
   };
 
   const handleClose = () => {
@@ -66,6 +68,8 @@ export default function ListaProdutos({list}: any) {
 
   function deleteProvider() {
     console.log('Excluir fornecedor ' + providerSelected);
+    providerService.delete(providerSelected);
+    setIsOpenConfirmation(false);
   }
 
   return (
@@ -80,7 +84,7 @@ export default function ListaProdutos({list}: any) {
         <DialogTitle id="alert-dialog-title">{"Confirmação de exclusão"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Tem certeza que deseja excluir o cadastro desse fornecedor {providerSelected}?.
+            Tem certeza que deseja excluir o cadastro do fornecedor selecionado?.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -110,6 +114,7 @@ export default function ListaProdutos({list}: any) {
         <TableBody>
           {list && list.map((provider: Provider) => (
             <StyledTableRow key={provider.id}>
+              { console.log(provider.id) }
               <StyledTableCell component="th" scope="row">
                 {provider.name}
               </StyledTableCell>
@@ -123,13 +128,14 @@ export default function ListaProdutos({list}: any) {
                 aria-label="more"
                 aria-controls={`long-menu-${provider.id}`}
                 aria-haspopup="true"
-                onClick={handleClick}
+                onClick={(e) => handleClick(e, provider.id)}
               >
                 <MoreVertIcon />
               </IconButton>
               <Menu
                 id={`long-menu-${provider.id}`}
-                anchorEl={anchorEl}         
+                anchorEl={anchorEl}  
+                onClick={(e) => console.log('Click', e.target.id)}       
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
@@ -140,10 +146,10 @@ export default function ListaProdutos({list}: any) {
                   elevation: 0
                 }}
               >
-                {options.map((option, index) => (
-                  <MenuItem key={option} selected={option === 'Pyxis'} onClick={() => {
-                    if (index === 2) {
-                      setProviderSelected(provider.id);
+                {options.map((option, indexMenuItem) => (
+                  <MenuItem key={option} id={provider.id} selected={option === 'Pyxis'} onClick={() => {
+                    if (indexMenuItem === 2) {
+                      console.log('Provider Selected', provider.id)
                       setIsOpenConfirmation(true);
                     }
                   }}>
