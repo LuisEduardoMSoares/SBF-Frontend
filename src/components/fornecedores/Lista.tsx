@@ -51,7 +51,7 @@ const options = [
 export default function ListaFornecedores({list}: any) {
   const classes = useStyles();
   const [ isOpenConfirmation, setIsOpenConfirmation ] = useState<boolean>(false);
-  const [ providerSelected, setProviderSelected ] = useState<number>();
+  const [ providerSelected, setProviderSelected ] = useState<number>(0);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
