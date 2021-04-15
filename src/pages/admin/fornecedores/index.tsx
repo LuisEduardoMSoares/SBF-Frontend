@@ -205,6 +205,8 @@ function Fornecedores() {
           shrink: true,
         }}
         variant="filled"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
       />
 
       <Box my={4}>
