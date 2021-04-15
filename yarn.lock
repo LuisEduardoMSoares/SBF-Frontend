@@ -897,7 +897,7 @@ cosmiconfig@^6.0.0:
 
 cpf-cnpj-validator@^1.0.3:
   version "1.0.3"
-  resolved "https://registry.npmjs.org/cpf-cnpj-validator/-/cpf-cnpj-validator-1.0.3.tgz"
+  resolved "https://registry.yarnpkg.com/cpf-cnpj-validator/-/cpf-cnpj-validator-1.0.3.tgz#8b8cfbf5110bf1d6333d18239380feecd0efe01d"
   integrity sha512-Slh7iv+sf2FhP9xFRMExuaDF7ndERVzmjBZHqwWG+GqHSqPmEggvLuKUUFJZxb+G804rjqRnnu5eCkbeChqM/Q==
   dependencies:
     "@hapi/joi" "^17.1.0"

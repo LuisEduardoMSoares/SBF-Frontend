@@ -128,14 +128,13 @@ export default function ListaFornecedores({list}: any) {
                 aria-label="more"
                 aria-controls={`long-menu-${provider.id}`}
                 aria-haspopup="true"
-                onClick={(e) => handleClick(e, provider.id)}
+                onClick={(e) => handleClick(e, provider.id as number)}
               >
                 <MoreVertIcon />
               </IconButton>
               <Menu
                 id={`long-menu-${provider.id}`}
-                anchorEl={anchorEl}  
-                onClick={(e) => console.log('Click', e.target.id)}       
+                anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
@@ -147,7 +146,7 @@ export default function ListaFornecedores({list}: any) {
                 }}
               >
                 {options.map((option, indexMenuItem) => (
-                  <MenuItem key={option} id={provider.id} selected={option === 'Pyxis'} onClick={() => {
+                  <MenuItem key={option} selected={option === 'Pyxis'} onClick={() => {
                     if (indexMenuItem === 2) {
                       console.log('Provider Selected', provider.id)
                       setIsOpenConfirmation(true);
