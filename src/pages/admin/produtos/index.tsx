@@ -149,6 +149,7 @@ function Produtos() {
           productService
             .delete(product)
             .then((deletedProduct: Product) => {
+              fetchProductList()
               Swal.fire({
                 title: "Sucesso!",
                 html: `<b>${deletedProduct.name} (${deletedProduct.size})</b> excluído com sucesso!`,
