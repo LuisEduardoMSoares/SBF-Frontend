@@ -48,7 +48,7 @@ export default function CadastroProdutos() {
 
   const classes = useStyles();
   const { toggleModal, modalParams } = useModal();
-  const { productId } = modalParams;
+  const { productId, afterProductSave } = modalParams;
 
   useEffect(() => {
     console.log("Product ID changed: ", productId);
@@ -86,7 +86,9 @@ export default function CadastroProdutos() {
         weight,
       };
 
-      await productService.save(newProduct);
+      await productService.save(newProduct).then(() => {
+        afterProductSave()
+      });
 
       //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
       Swal.fire({

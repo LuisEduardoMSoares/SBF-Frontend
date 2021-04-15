@@ -1,6 +1,6 @@
 interface productMetaDateTime {
-  created_on: string
-  updated_on: string
+  created_on: Date
+  updated_on: Date
 }
 
 export default interface Product {

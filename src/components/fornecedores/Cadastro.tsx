@@ -1,5 +1,5 @@
 import React, {FormEvent, useState} from 'react'
-import { Alert, Button, Container, createStyles, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, InputAdornment, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
+import { Alert, Button, Container, createStyles, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
 import { faBan, faSave, faTshirt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,7 +8,6 @@ import Swal from 'sweetalert2';
 import Provider from 'models/provider';
 import providerService from 'services/providerService';
 import {cnpj as cnpjValidator} from 'cpf-cnpj-validator';
-import MuiAlert from '@material-ui/lab/Alert';
 import {emailValidator} from 'utils/functions'
 
 

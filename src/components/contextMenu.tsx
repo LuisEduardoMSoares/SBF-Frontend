@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Product from "models/product";
-import { ContextMenuOption } from './index'
+
+export interface ContextMenuOption {
+  title: string;
+  action?: Function | any;
+}
 
 export default function contextMenu({
-  product, 
+  productId, 
   menuOptions
 }: {
-  product: Product, 
+  productId: Number, 
   menuOptions: ContextMenuOption[]
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -26,14 +29,14 @@ export default function contextMenu({
     <>
       <IconButton
         aria-label="more"
-        aria-controls={`long-menu-${product.id}`}
+        aria-controls={`long-menu-${productId}`}
         aria-haspopup="true"
         onClick={handleClick}
       >
         <MoreVertIcon />
       </IconButton>
       <Menu
-        id={`long-menu-${product.id}`}
+        id={`long-menu-${productId}`}
         anchorEl={anchorEl}         
         open={open}
         onClose={handleClose}
@@ -47,7 +50,7 @@ export default function contextMenu({
       >
         {menuOptions.map((option) => (
           <MenuItem key={option.title} onClick={() => {
-            option.action(product)
+            option.action(productId)
             handleClose()
           }}>
             {option.title}
