@@ -33,7 +33,7 @@ const productService = {
       pageSize: 20
     }
   ): Promise<productsPagedResponse> {
-    if(page === 0) page = 1;
+    page = page === 0 ? 1 : page + 1;
     try {
       const result = await api.get(`/products/page/${page}`, {
         params: { per_page: pageSize, name: name },
@@ -66,7 +66,8 @@ const productService = {
 
   async delete(product: Product): Promise<Product> {
     try {
-      return await api.delete(`/products/${product.id}`);
+      const result = await api.delete(`/products/${product.id}`);
+      return result.data
     } catch (error) {
       throw new Error(error);
     }

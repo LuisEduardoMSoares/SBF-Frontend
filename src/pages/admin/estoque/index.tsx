@@ -4,7 +4,6 @@ import Box from '@material-ui/core/Box';
 import { Button, TextField } from '@material-ui/core';
 import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ComponentTable from 'components/Table';
 import withGuard from 'utils/withGuard';
 
 function Estoque() {  
@@ -33,7 +32,6 @@ function Estoque() {
       />
 
       <Box my={4}>
-        <ComponentTable />
       </Box>
     </>
   );
