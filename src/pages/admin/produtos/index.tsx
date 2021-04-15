@@ -51,7 +51,7 @@ function Produtos() {
       renderCell: (params: GridCellParams) => {
         return (
           <ContextMenu 
-            productId={params.getValue('productId') as Number} 
+            resourceId={params.getValue('productId') as Number} 
             menuOptions={params.value as ContextMenuOption[]} 
           />
         )

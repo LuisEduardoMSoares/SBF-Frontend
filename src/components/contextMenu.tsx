@@ -8,10 +8,10 @@ export interface ContextMenuOption {
 }
 
 export default function contextMenu({
-  productId, 
+  resourceId, 
   menuOptions
 }: {
-  productId: Number, 
+  resourceId: Number,
   menuOptions: ContextMenuOption[]
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -29,14 +29,14 @@ export default function contextMenu({
     <>
       <IconButton
         aria-label="more"
-        aria-controls={`long-menu-${productId}`}
+        aria-controls={`long-menu-${resourceId}`}
         aria-haspopup="true"
         onClick={handleClick}
       >
         <MoreVertIcon />
       </IconButton>
       <Menu
-        id={`long-menu-${productId}`}
+        id={`long-menu-${resourceId}`}
         anchorEl={anchorEl}         
         open={open}
         onClose={handleClose}
@@ -50,7 +50,7 @@ export default function contextMenu({
       >
         {menuOptions.map((option) => (
           <MenuItem key={option.title} onClick={() => {
-            option.action(productId)
+            option.action(resourceId)
             handleClose()
           }}>
             {option.title}

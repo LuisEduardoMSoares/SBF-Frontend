@@ -1,7 +1,7 @@
 import React, {FormEvent, useEffect, useState} from 'react'
 import { Alert, Button, Container, createStyles, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
-import { faBan, faSave, faTshirt } from '@fortawesome/free-solid-svg-icons'
+import { faBan, faSave, faTruckMoving } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useModal from 'hooks/useModal';
 import Swal from 'sweetalert2';
@@ -67,7 +67,7 @@ export default function CadastroFornecedor() {
     }
   }, [modalParams]);
 
-  const formChanged = name || phoneNumber || cnpj || email || contactName
+  const formChanged = name != provider.name || phoneNumber != provider.phone_number || cnpj != provider.cnpj || email != provider.email || contactName != provider.contact_name
 
   async function handleSubmit($event: FormEvent) {
     $event.preventDefault();
@@ -119,7 +119,7 @@ export default function CadastroFornecedor() {
       </Snackbar>
       <Container max-width="ls">
         <Typography variant="h4" component="h1" color="primary" className={classes.formTitle}>
-          <FontAwesomeIcon icon={faTshirt} /> { !name ? 'Cadastro de Fornecedor' : name }
+          <FontAwesomeIcon icon={faTruckMoving} /> { !name ? 'Cadastro de Fornecedor' : name }
         </Typography>
 
         <form noValidate onSubmit={handleSubmit}>

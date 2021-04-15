@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Button, makeStyles, TextField } from '@material-ui/core';
-import { faTshirt } from '@fortawesome/free-solid-svg-icons';
+import { faTruckMoving } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import withGuard from 'utils/withGuard';
 import Provider from 'models/provider';
@@ -32,9 +32,9 @@ function Fornecedores() {
     { field: "providerId", headerName: "ID", width: 80, headerClassName: classes.head, cellClassName: defineCellClass},
     { field: "name", headerName: "Nome", flex: 2, headerClassName: classes.head, cellClassName: defineCellClass },
     { field: "cnpj", headerName: "CNPJ", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
-    { field: "phoneNumber", headerName: "Telefone", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
+    { field: "phone_number", headerName: "Telefone", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
     { field: "email", headerName: "Email", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
-    { field: "contactName", headerName: "Contato", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
+    { field: "contact_name", headerName: "Contato", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
     {
       field: "updatedOn",
       type: "dateTime",
@@ -51,7 +51,7 @@ function Fornecedores() {
       renderCell: (params: GridCellParams) => {
         return (
           <ContextMenu 
-            productId={params.getValue('id') as Number} 
+            resourceId={params.getValue('providerId') as Number} 
             menuOptions={params.value as ContextMenuOption[]} 
           />
         )
@@ -64,13 +64,13 @@ function Fornecedores() {
   }
 
   const { toggleModal } = useModal();
-  const [providerList, setProviderList] = useState([] as Provider[]);
   const [providerRows, setProviderRows] = useState<GridRowsProp>([]);
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(5);
   const [loading, setLoading] = useState<boolean>(false);
   const [rowCount, setRowCount] = useState<number>(0);
   const [name, setName] = useState<string>("");
+  var providerList: Provider[]
 
   useEffect(() => {
     fetchProviderList();
@@ -80,9 +80,9 @@ function Fornecedores() {
     setLoading(true);
     await providerService.fetch({ page, pageSize, name })
       .then((response) => {
-        setProviderList(response.records);
-        setLoading(false);
-        setRowCount(response.pagination_metadata.total_count);
+        providerList = response.records
+        setLoading(false)
+        setRowCount(response.pagination_metadata.total_count)
         setProviderRows(
           response.records.map((provider) => {
             const { id, name, cnpj, phone_number, email, contact_name } = provider;
@@ -93,7 +93,7 @@ function Fornecedores() {
                     : provider.metadatetime.created_on
                 )
               : null;
-            let actions:ContextMenuOption[] = [
+            let actions: ContextMenuOption[] = [
               {
                 title: 'Alterar',
                 action: handleProviderChange
@@ -164,7 +164,7 @@ function Fornecedores() {
     <>
       <Box my={4} display="flex" justifyContent="space-between">
         <Typography variant="h4" component="h1" color="primary">
-          <FontAwesomeIcon size="lg" icon={faTshirt} />&nbsp;
+          <FontAwesomeIcon size="lg" icon={faTruckMoving} />&nbsp;
           Fornecedores
         </Typography>
         <Button variant="contained" size="large" color="secondary" onClick={() => handleProviderChange(null)}>
