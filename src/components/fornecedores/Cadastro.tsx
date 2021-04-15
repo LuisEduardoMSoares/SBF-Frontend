@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from 'react'
+import React, {FormEvent, useEffect, useState} from 'react'
 import { Alert, Button, Container, createStyles, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
 import { faBan, faSave, faTshirt } from '@fortawesome/free-solid-svg-icons'
@@ -9,6 +9,7 @@ import Provider from 'models/provider';
 import providerService from 'services/providerService';
 import {cnpj as cnpjValidator} from 'cpf-cnpj-validator';
 import {emailValidator} from 'utils/functions'
+import { useRouter } from 'next/router';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,7 +24,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const initialProviderState: Provider = {
+  name: "",
+  cnpj: "",
+  contact_name: "",
+  phone_number: "",
+  email: ""
+};
+
 export default function CadastroFornecedor() {
+  const router = useRouter();
+
+  const [provider, setProvider] = useState<Provider>(initialProviderState);
+
   const [ name, setName ] = useState<string>('')
   const [ cnpj, setCnpj ] = useState<string>('')
   const [ phoneNumber, setPhoneNumber ] = useState<string>('')
@@ -33,7 +46,26 @@ export default function CadastroFornecedor() {
   const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
   const classes = useStyles()
-  const { toggleModal } = useModal()
+  const { toggleModal, modalParams } = useModal();
+  const { providerId, afterProviderSave } = modalParams;
+
+  useEffect(() => {
+    console.log("Provider ID changed: ", providerId);
+
+    if (providerId) {
+      providerService
+        .getOne(providerId)
+        .then((provider: Provider) => {
+          setProvider(provider);
+          setName(provider.name);
+          setCnpj(provider.cnpj);
+          setContactName(provider.contact_name);
+          setEmail(provider.email);
+          setPhoneNumber(provider.phone_number);
+        })
+        .catch(console.error);
+    }
+  }, [modalParams]);
 
   const formChanged = name || phoneNumber || cnpj || email || contactName
 
@@ -41,6 +73,7 @@ export default function CadastroFornecedor() {
     $event.preventDefault();
 
     const newProvider: Provider = {
+      id: providerId,
       name,
       cnpj,
       phone_number: phoneNumber,
@@ -48,12 +81,15 @@ export default function CadastroFornecedor() {
       contact_name: contactName
     }
 
-    await providerService.insert(newProvider);
+    await providerService.insert(newProvider).then(() => {
+      afterProviderSave();
+    });
 
     Swal.fire({
       text: 'Fornecedor cadastrado com sucesso!'
     })
-    toggleModal({})
+    toggleModal({});
+    router.push('/admin/fornecedores',undefined,{shallow: true})
   }
 
   function handleCancel() {
