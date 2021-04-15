@@ -183,7 +183,7 @@ function Produtos() {
       <TextField
         id="filled-full-width"
         label="Pesquisar"
-        placeholder="Pesquisar por Nome do Produto, Quantidade, Fornecedor, etc."
+        placeholder="Pesquisar por Nome do Produto."
         fullWidth
         margin="normal"
         InputLabelProps={{

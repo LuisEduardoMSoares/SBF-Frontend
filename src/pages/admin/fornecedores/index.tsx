@@ -20,11 +20,6 @@ import {
 import ContextMenu, { ContextMenuOption } from "components/contextMenu";
 import Swal from 'sweetalert2';
 
-// const Lista = dynamic(
-//   () => import('components/fornecedores/Lista'),
-//   { ssr: false }
-// )
-
 const Cadastro = dynamic(
   () => import('components/fornecedores/Cadastro'),
   { ssr: false }
@@ -165,24 +160,6 @@ function Fornecedores() {
     console.log("providerDeleteCalled", provider);
   }
 
-  // function insertProvider() {
-  //   toggleModal(
-  //     { 
-  //       title: "Cadastro de Fornecedores",
-  //       content: (
-  //         <Cadastro />
-  //       )
-  //     }
-  //   )
-  // }
-
-  // useEffect(() => {
-  //   providerService.list()
-  //   .then(response => {
-  //     if(response) setProviderList(response)
-  //   })
-  // }, [])
-
   return (
     <>
       <Box my={4} display="flex" justifyContent="space-between">
@@ -198,7 +175,7 @@ function Fornecedores() {
       <TextField
         id="filled-full-width"
         label="Pesquisar"
-        placeholder="Pesquisar por Nome do Fornecedor, E-mail, CNPJ, etc."
+        placeholder="Pesquisar por Nome do Fornecedor."
         fullWidth
         margin="normal"
         InputLabelProps={{
@@ -210,7 +187,6 @@ function Fornecedores() {
       />
 
       <Box my={4}>
-        {/* <Lista list={providerList}></Lista> */}
         <DataGrid
             autoHeight={true}
             page={page}
