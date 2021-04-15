@@ -19,6 +19,14 @@ const providerService = {
     } catch(error) {
       console.error(error)
     }
+  },
+
+  async delete(providerId: number) {
+    try {
+      await api.delete(`/providers/${providerId}`)
+    } catch(error) {
+      console.error(error)
+    }
   }
 }
 
