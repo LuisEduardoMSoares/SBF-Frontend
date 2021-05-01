@@ -210,7 +210,7 @@ export default function CadastroFornecedor() {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
+            justify="flex-end"
             alignItems="center"
             className={classes.formActions}
           >

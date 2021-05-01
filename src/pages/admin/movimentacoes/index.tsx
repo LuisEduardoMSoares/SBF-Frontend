@@ -14,8 +14,12 @@ import {
   TableHeaderRow,
   TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
+import useModal from 'hooks/useModal';
+import dynamic from 'next/dynamic';
 
-const RowDetail = ({ row }) => {
+const TransactionForm = dynamic(() => import("components/movimentacoes/Cadastro"));
+
+const RowDetail = ({ row }: any) => {
   console.log(row);
   return (
   <div>
@@ -29,9 +33,24 @@ const RowDetail = ({ row }) => {
   </div>
 )};
 
-function Estoque() {  
+function Movimentacoes() {  
+  const { toggleModal } = useModal();
+
+  function handleTransactionChange(transactionId: Number | null) {
+    toggleModal({
+      title: "Movimentação",
+      content: <TransactionForm />,
+      route: !transactionId ? "add" : `update/${transactionId}`,
+      params: { transactionId, afterProductSave: fetchTransactionList},
+    });
+  }
+
+  function fetchTransactionList() {
+    console.log('fetchTransactionList Called')
+  }
+
   const [columns] = useState([
-    { name: 'name', title: 'Produto' },
+    { name: 'name', title: 'Produto'  },
     { name: 'quantity', title: 'Quantidade Disponível' },
     { name: 'update_date', title: 'Últ. Atualização'}
   ]);
@@ -49,9 +68,14 @@ function Estoque() {
       <Box my={4} display="flex" justifyContent="space-between">
         <Typography variant="h4" component="h1" color="primary">
           <FontAwesomeIcon size="lg" icon={faBox} />&nbsp;
-          Estoque
+          Movimentações
         </Typography>
-        <Button variant="contained" size="large" color="secondary">
+        <Button 
+          variant="contained" 
+          size="large" 
+          color="secondary"
+          onClick={() => handleTransactionChange(null)}
+        >
           + Movimentação
         </Button>
       </Box>
@@ -89,4 +113,4 @@ function Estoque() {
   );
 }
 
-export default withGuard(Estoque)
+export default withGuard(Movimentacoes)

@@ -1,7 +1,4 @@
-interface productMetaDateTime {
-  created_on: Date
-  updated_on: Date
-}
+import metaData from './metadata';
 
 export default interface Product {
   id?: number
@@ -9,5 +6,5 @@ export default interface Product {
   size: number | string
   inventory: number
   weight?: number
-  metadatetime?: productMetaDateTime
+  metadatetime?: metaData
 }

@@ -3,20 +3,21 @@ import {
   Button,
   Container,
   createStyles,
-  InputAdornment,
   makeStyles,
+  MenuItem,
+  Paper,
   TextField,
   Theme,
   Typography,
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { faBan, faSave, faTshirt } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faBoxOpen, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useModal from "hooks/useModal";
 import Swal from "sweetalert2";
-import Product from "models/product";
-import productService from "services/productService";
 import { useRouter } from "next/router";
+import Transaction, { transactionType } from "models/transaction";
+import { DataGrid, GridColDef, GridRowsProp } from "@material-ui/data-grid";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,27 +31,53 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const initialProductState: Product = {
-  name: "",
-  size: "",
-  inventory: 0,
-  weight: 0,
+interface transactionTypesSelect {
+  value: transactionType;
+  label: string;
+}
+const transactionTypes: transactionTypesSelect[] = [
+  {
+    value: "ENTRADA",
+    label: "Entrada",
+  },
+  {
+    value: "SAIDA",
+    label: "Saída",
+  },
+];
+
+const initialTransactionState: Transaction = {
+  type: "ENTRADA",
+  products: [],
+  date: new Date(),
 };
 
-export default function CadastroProdutos() {
+export default function CadastroMovimentacao() {
   const router = useRouter();
 
-  const [product, setProduct] = useState<Product>(initialProductState);
-  const [name, setName] = useState<string>("");
-  const [size, setSize] = useState<string | number>("");
-  const [inventory, setInventory] = useState<number>(0);
-  const [weight, setWeight] = useState<number | any>(0);
+  const [transaction, setTransaction] = useState<Transaction>(
+    initialTransactionState
+  );
+  const [transactionType, setTransactionType] = useState<string>("");
+
+  const [productRows, setProductRows] = useState<GridRowsProp>([
+    {
+      id: 1,
+      name: "Teste",
+      quantity: 20,
+    },
+  ]);
+
+  const productColumns: GridColDef[] = [
+    { field: "name", headerName: "Nome do Produto", flex: 1 },
+    { field: "quantity", headerName: "Quantidade", width: 150 },
+  ];
 
   const classes = useStyles();
-  const { toggleModal, modalParams } = useModal();
-  const { productId, afterProductSave } = modalParams;
+  // const { toggleModal, modalParams } = useModal();
+  // const { transactionId, afterTransactionSave } = modalParams;
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("Product ID changed: ", productId);
 
     if (productId) {
@@ -127,7 +154,7 @@ export default function CadastroProdutos() {
         if (result.isConfirmed) toggleModal({});
       });
     } else toggleModal({});
-  }
+  }*/
 
   return (
     <>
@@ -138,78 +165,36 @@ export default function CadastroProdutos() {
           color="primary"
           className={classes.formTitle}
         >
-          <FontAwesomeIcon icon={faTshirt} />{" "}
-          {!name ? "Cadastro de Produto" : name}
+          <FontAwesomeIcon icon={faBoxOpen} /> Registro de Movimentação
         </Typography>
 
-        <form noValidate onSubmit={handleProductSave}>
+        <form noValidate>
           <TextField
             variant="filled"
             margin="normal"
+            select
             required
             fullWidth
             id="name"
-            label="Nome do Produto"
+            label="Tipo de Transação"
             name="name"
             autoComplete="off"
             autoFocus
-            onChange={(event) => setName(event.target.value)}
-            value={name}
-          />
+            onChange={(event) => setTransactionType(event.target.value)}
+            value={transactionType}
+          >
+            {transactionTypes.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
 
-          <TextField
-            variant="filled"
-            margin="normal"
-            required
-            fullWidth
-            id="size"
-            label="Tamanho"
-            name="size"
-            autoComplete="off"
-            onChange={(event) => setSize(event.target.value)}
-            value={size}
-          />
-
-          <TextField
-            type="number"
-            variant="filled"
-            margin="normal"
-            required
-            fullWidth
-            id="inventory"
-            label="Quantidade"
-            name="inventory"
-            autoComplete="off"
-            onChange={(event) => setInventory(parseFloat(event.target.value))}
-            value={inventory}
-          />
-
-          <TextField
-            variant="filled"
-            margin="normal"
-            type="number"
-            required
-            fullWidth
-            id="weight"
-            label="Peso (kg)"
-            name="weight"
-            autoComplete="off"
-            onChange={(event) =>
-              setWeight(
-                event.target.value
-                  ? parseFloat(event.target.value) < 0
-                    ? 0
-                    : parseFloat(event.target.value)
-                  : 0
-              )
-            }
-            value={weight}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">Kg</InputAdornment>
-              ),
-            }}
-          />
+          <Paper>
+            <Grid container direction="row">
+              
+            </Grid>
+          </Paper>
 
           <Grid
             container
@@ -219,7 +204,7 @@ export default function CadastroProdutos() {
             className={classes.formActions}
           >
             <Grid item xs={3}>
-              <Button size="large" color="secondary" onClick={handleCancel}>
+              <Button size="large" color="secondary">
                 <FontAwesomeIcon icon={faBan} />
                 &nbsp; Cancelar
               </Button>
