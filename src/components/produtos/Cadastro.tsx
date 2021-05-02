@@ -217,6 +217,7 @@ export default function CadastroProdutos() {
             justify="flex-end"
             alignItems="center"
             className={classes.formActions}
+            spacing={1}
           >
             <Grid item xs={3}>
               <Button size="large" color="secondary" onClick={handleCancel}>
@@ -224,7 +225,7 @@ export default function CadastroProdutos() {
                 &nbsp; Cancelar
               </Button>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Button
                 variant="contained"
                 size="large"

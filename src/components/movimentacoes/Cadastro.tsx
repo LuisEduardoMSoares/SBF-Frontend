@@ -1,23 +1,29 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import {
+  Box,
   Button,
   Container,
   createStyles,
+  Fab,
   makeStyles,
   MenuItem,
-  Paper,
   TextField,
   Theme,
   Typography,
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { faBan, faBoxOpen, faSave } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBan,
+  faBoxOpen,
+  faPlus,
+  faSave,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useModal from "hooks/useModal";
-import Swal from "sweetalert2";
 import { useRouter } from "next/router";
-import Transaction, { transactionType } from "models/transaction";
-import { DataGrid, GridColDef, GridRowsProp } from "@material-ui/data-grid";
+import Transaction, { transactionType, transactionProduct } from "models/transaction";
+import Product from "models/product";
+import productService from "services/productService";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,6 +34,18 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: "right",
       marginTop: theme.spacing(3),
     },
+    rootContainer: {
+      minWidth: 740
+    },
+    button: {
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+      backgroundColor: theme.palette.error.main,
+
+      '&:hover': {
+        backgroundColor: theme.palette.error.main
+      }
+    }
   })
 );
 
@@ -59,106 +77,41 @@ export default function CadastroMovimentacao() {
     initialTransactionState
   );
   const [transactionType, setTransactionType] = useState<string>("");
+  const [productList, setProductList] = useState<Product[]>([]);
+  const [inputList, setInputList] = useState<transactionProduct[]>([{ product_id: '', quantity: 0 }]);
 
-  const [productRows, setProductRows] = useState<GridRowsProp>([
-    {
-      id: 1,
-      name: "Teste",
-      quantity: 20,
-    },
-  ]);
+  // handle input change
+  function handleInputChange(e: any, index: number) {
+    const { name, value } = e.target;
+    const list:any[] = [...inputList];
+    list[index][name] = value;
+    setInputList(list);
+  };
+ 
+  // handle click event of the Remove button
+  function handleRemoveClick(index:number) {
+    const list = [...inputList];
+    list.splice(index, 1);
+    setInputList(list);
+  };
+ 
+  // handle click event of the Add button
+  function handleAddClick() {
+    setInputList([...inputList, { product_id: "", quantity: 0 }]);
+  };
 
-  const productColumns: GridColDef[] = [
-    { field: "name", headerName: "Nome do Produto", flex: 1 },
-    { field: "quantity", headerName: "Quantidade", width: 150 },
-  ];
+  useEffect(() => {
+    productService.list().then((response) => {
+      console.log(response);
+      setProductList(response);
+    });
+  }, []);
 
   const classes = useStyles();
-  // const { toggleModal, modalParams } = useModal();
-  // const { transactionId, afterTransactionSave } = modalParams;
-
-  /*useEffect(() => {
-    console.log("Product ID changed: ", productId);
-
-    if (productId) {
-      productService
-        .getOne(productId)
-        .then((product: Product) => {
-          setProduct(product);
-          setName(product.name);
-          setSize(product.size);
-          setInventory(product.inventory);
-          setWeight(product.weight);
-        })
-        .catch(console.error);
-    }
-  }, [modalParams]);
-
-  const isFormChanged =
-    name != product.name ||
-    inventory != product.inventory ||
-    weight != product.weight ||
-    size != product.size
-
-  async function handleProductSave($event: FormEvent) {
-    $event.preventDefault();
-
-    if(isFormChanged) {
-
-      const newProduct: Product = {
-        id: productId,
-        name,
-        inventory,
-        size,
-        weight,
-      };
-
-      await productService.save(newProduct).then(() => {
-        afterProductSave()
-      });
-
-      //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
-      Swal.fire({
-        title: "Sucesso!", 
-        html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
-        icon: "success"
-      });
-
-      toggleModal({})
-
-      router.push('/admin/produtos',undefined,{shallow: true})
-    } else {
-      Swal.fire({
-        text: "Nada foi alterado",
-        position: "bottom",
-        timer: 2500,
-        showConfirmButton: false,
-        toast: true
-      })
-      toggleModal({})
-    }
-  }
-
-  async function handleCancel() {
-    if (isFormChanged) {
-      await Swal.fire({
-        showCancelButton: true,
-        title: "Cancelar Cadastro",
-        text: "Tem certeza de que deseja cancelar suas alterações?",
-        icon: "warning",
-        cancelButtonText: "Não, voltar ao formulário",
-        confirmButtonText: "Sim, descartar alterações",
-        confirmButtonColor: "#FF0000",
-        cancelButtonColor: "#556cd6",
-      }).then((result: any) => {
-        if (result.isConfirmed) toggleModal({});
-      });
-    } else toggleModal({});
-  }*/
 
   return (
     <>
-      <Container max-width="ls">
+      <Container className={classes.rootContainer}>
         <Typography
           variant="h4"
           component="h1"
@@ -189,37 +142,112 @@ export default function CadastroMovimentacao() {
               </MenuItem>
             ))}
           </TextField>
+          
+          <Box my={2}>
+            <Typography
+              variant="h5"
+              component="h3"
+              color="primary"
+            >
+              Produtos 
+            </Typography>
 
-          <Paper>
-            <Grid container direction="row">
-              
-            </Grid>
-          </Paper>
+            {inputList.map((input, index) => {
+              return (
+                <Grid key={index} container direction="row" alignItems="center" spacing={2}>
+                  <Grid item xs={9}>
+                    <TextField
+                      variant="filled"
+                      margin="normal"
+                      select
+                      required
+                      fullWidth
+                      id="product_id"
+                      label="Produto"
+                      name="product_id"
+                      autoComplete="off"
+                      autoFocus
+                    >
+                      <MenuItem value="">Selecione...</MenuItem>
+                      {productList &&
+                        productList.length > 0 &&
+                        productList.map((product) => (
+                          <MenuItem
+                            key={product.id as number}
+                            value={product.id as number}
+                          >
+                            {product.name}
+                          </MenuItem>
+                        ))}
+                    </TextField>
+                  </Grid>
 
-          <Grid
-            container
-            direction="row"
-            justify="flex-end"
-            alignItems="center"
-            className={classes.formActions}
-          >
-            <Grid item xs={3}>
-              <Button size="large" color="secondary">
-                <FontAwesomeIcon icon={faBan} />
-                &nbsp; Cancelar
-              </Button>
+                  <Grid item xs={2}>
+                    <TextField
+                      variant="filled"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="quantity"
+                      label="Quantidade"
+                      name="quantity"
+                      autoComplete="off"
+                      autoFocus
+                      type="number"
+                    />
+                  </Grid>
+
+                  <Grid item xs={1}>
+                    <Fab
+                      size="medium"
+                      color="secondary"
+                      type="button"
+                      className={classes.button}
+                      onClick={() => { handleRemoveClick(index)}}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </Fab>
+                  </Grid>
+                </Grid>
+              )}
+            )}
+
+            <Grid container justify="center">
+            <Button
+                  variant="outlined"
+                  size="small"
+                  color="secondary"
+                  onClick={handleAddClick}
+                >
+                  <FontAwesomeIcon icon={faPlus} /> &nbsp; Adicionar Produto
+                </Button>
             </Grid>
-            <Grid item xs={4}>
-              <Button
-                variant="contained"
-                size="large"
-                color="secondary"
-                type="submit"
-              >
-                <FontAwesomeIcon icon={faSave} /> &nbsp; Cadastrar
-              </Button>
+            </Box>
+
+            <Grid
+              container
+              direction="row"
+              justify="flex-end"
+              alignItems="center"
+              className={classes.formActions}
+            >
+              <Grid item xs={3}>
+                <Button size="large" color="secondary">
+                  <FontAwesomeIcon icon={faBan} />
+                  &nbsp; Cancelar
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="secondary"
+                  type="submit"
+                >
+                  <FontAwesomeIcon icon={faSave} /> &nbsp; Cadastrar
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
         </form>
       </Container>
     </>

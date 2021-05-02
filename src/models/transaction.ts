@@ -13,6 +13,6 @@ export default interface Transaction {
 export type transactionType = "ENTRADA" | "SAIDA"
 
 export interface transactionProduct {
-  product_id: number,
-  quantity: number
+  product_id?: number|string,
+  quantity?: number
 }

@@ -59,6 +59,8 @@ export default function Modal() {
           scroll="paper"
           aria-labelledby="scroll-dialog-title"
           className={classes.dialog}
+          fullWidth={true}
+          maxWidth="md"
         >
           { modalTitle && (
             <DialogTitle id="scroll-dialog-title" className={classes.dialogTitle}>
