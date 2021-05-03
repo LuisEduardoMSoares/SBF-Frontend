@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dialog: {
-      zIndex: 1001,
+      zIndex: 600,
     },
     dialogTitle: {
       padding: 0,

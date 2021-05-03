@@ -5,7 +5,7 @@ import withGuard from 'utils/withGuard';
 
 function Dashboard() {
   return (
-    <Box sx={{ my: 4 }}>
+    <Box my={4} mx={4}>
       <Typography variant="h3" component="h1" gutterBottom color="primary">
         Dashboard
       </Typography>
