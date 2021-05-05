@@ -16,7 +16,6 @@ import useModal from "hooks/useModal";
 import Swal from "sweetalert2";
 import Product from "models/product";
 import productService from "services/productService";
-import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,8 +37,6 @@ const initialProductState: Product = {
 };
 
 export default function CadastroProdutos() {
-  const router = useRouter();
-
   const [product, setProduct] = useState<Product>(initialProductState);
   const [name, setName] = useState<string>("");
   const [size, setSize] = useState<string | number>("");
@@ -98,8 +95,6 @@ export default function CadastroProdutos() {
       });
 
       toggleModal({})
-
-      router.push('/admin/produtos',undefined,{shallow: true})
     } else {
       Swal.fire({
         text: "Nada foi alterado",

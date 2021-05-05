@@ -25,7 +25,6 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/router";
 import Transaction, {
   transactionType,
   transactionProduct,
@@ -47,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formTitle: {
       paddingBottom: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     formActions: {
       textAlign: "right",
@@ -89,17 +88,21 @@ const initialTransactionState: Transaction = {
 };
 
 export default function CadastroMovimentacao() {
-  const router = useRouter();
   const { toggleModal, modalParams } = useModal();
-  const { afterTransactionSave } = modalParams;
+  const {
+    productId,
+    providerId,
+    afterTransactionSave,
+  }: { productId?: number; providerId?: number,  afterTransactionSave?: any } = modalParams;
   const transactionService = new TransactionService();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [_transaction, _setTransaction] = useState<Transaction>(
     initialTransactionState
   );
   const [transactionDate, setTransactionDate] = useState<Date>(new Date());
-  const [transactionType, setTransactionType] = useState<string>();
-  const [transactionProviderId, setTransactionProviderId] = useState<string>();
+  const [transactionType, setTransactionType] = useState<string>("");
+  const [transactionProviderId, setTransactionProviderId] = useState<string>("");
   const [
     transactionDescription,
     setTransactionDescription,
@@ -110,44 +113,6 @@ export default function CadastroMovimentacao() {
 
   const [productList, setProductList] = useState<Product[]>([]);
   const [providerList, setProviderList] = useState<Provider[]>([]);
-
-  async function handleTransactionSave(event: FormEvent) {
-    event.preventDefault();
-
-    const transactionData: Transaction = {
-      date: transactionDate,
-      type: transactionType as transactionType,
-      description: transactionDescription,
-      products: transactionProducts,
-    };
-
-    if (transactionData.type === "ENTRADA") {
-      transactionData.provider_id = transactionProviderId
-        ? transactionProviderId
-        : 0;
-    }
-
-    await transactionService.save(transactionData).catch((error) => {
-      console.error(error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops!",
-        text: `Erro ao salvar a movimentação. Mensagem de erro: ${error}`,
-      });
-    });
-
-    if(afterTransactionSave) afterTransactionSave();
-
-    Swal.fire({
-      title: "Sucesso!",
-      html: `Movimentação incluída com sucesso!`,
-      icon: "success",
-    });
-
-    toggleModal({});
-
-    router.push('/admin/movimentacoes',undefined,{shallow: true})
-  }
 
   // handle input change
   function handleInputChange(event: BaseSyntheticEvent, index: number) {
@@ -173,17 +138,105 @@ export default function CadastroMovimentacao() {
   }
 
   function onTransactionTypeChange(event: BaseSyntheticEvent) {
-    const { value } = event.target
-    setTransactionType(value)
-    if(value === "SAIDA") setTransactionProviderId(undefined)
+    const { value } = event.target;
+    setTransactionType(value);
+    if (value === "SAIDA") setTransactionProviderId('');
+  }
+
+  const isFormChanged =
+    transactionType ||
+    transactionProviderId ||
+    transactionDescription ||
+    transactionProducts.filter((item) => item.product_id && item.quantity)
+      .length > 0;
+
+  async function handleTransactionSave(event: FormEvent) {
+    event.preventDefault();
+
+    if (isFormChanged) {
+      const transactionData: Transaction = {
+        date: transactionDate,
+        type: transactionType as transactionType,
+        description: transactionDescription,
+        products: transactionProducts.filter(
+          (item) => item.product_id && item.quantity
+        ),
+      };
+
+      if (transactionData.type === "ENTRADA") {
+        transactionData.provider_id = transactionProviderId
+          ? transactionProviderId
+          : 0;
+      }
+
+      try {
+        await transactionService.save(transactionData);
+
+        Swal.fire({
+          title: "Sucesso!",
+          html: `Movimentação incluída com sucesso!`,
+          icon: "success",
+        });
+
+        if (afterTransactionSave) afterTransactionSave();
+
+        toggleModal({});
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops!",
+          text: `Erro ao salvar a movimentação. Mensagem de erro: ${error}`,
+        });
+      }
+    } else {
+      Swal.fire({
+        text: "Altere algo para gravar a movimentação",
+        position: "bottom",
+        timer: 2500,
+        showConfirmButton: true,
+        toast: true,
+      });
+    }
+  }
+
+  async function handleCancel() {
+    if (isFormChanged) {
+      await Swal.fire({
+        showCancelButton: true,
+        title: "Cancelar Movimentação",
+        text: "Tem certeza de que deseja cancelara movimentação atual?",
+        icon: "warning",
+        cancelButtonText: "Não, voltar ao formulário",
+        confirmButtonText: "Sim, descartar alterações",
+        confirmButtonColor: "#FF0000",
+        cancelButtonColor: "#556cd6",
+      }).then((result: any) => {
+        if (result.isConfirmed) toggleModal({});
+      });
+    } else toggleModal({});
   }
 
   useEffect(() => {
+    setLoading(true);
     productService.list().then((response) => {
       setProductList(response);
-    });
-    providerService.list().then((response) => {
-      setProviderList(response);
+
+      if (productId) {
+        setTransactionProducts([
+          { product_id: productId, quantity: 1 },
+          ...transactionProducts,
+        ]);
+      }
+      providerService.list().then((response) => {
+        setProviderList(response);
+
+        if(providerId) {
+          setTransactionType("ENTRADA")
+          setTransactionProviderId(`${providerId}`);
+        }
+
+        setLoading(false);
+      });
     });
   }, []);
 
@@ -222,6 +275,7 @@ export default function CadastroMovimentacao() {
                   KeyboardButtonProps={{
                     "aria-label": "Mudar Data",
                   }}
+                  disabled={loading}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -243,6 +297,7 @@ export default function CadastroMovimentacao() {
                   onTransactionTypeChange(event);
                 }}
                 value={transactionType}
+                disabled={loading}
               >
                 {transactionTypes.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -270,6 +325,7 @@ export default function CadastroMovimentacao() {
                     setTransactionProviderId(event.target.value)
                   }
                   value={transactionProviderId}
+                  disabled={loading}
                 >
                   {providerList.map((option) => (
                     <MenuItem key={option.id} value={option.id}>
@@ -296,6 +352,7 @@ export default function CadastroMovimentacao() {
                   setTransactionDescription(event.target.value)
                 }
                 value={transactionDescription}
+                disabled={loading}
               />
             </Grid>
           </Grid>
@@ -313,6 +370,7 @@ export default function CadastroMovimentacao() {
                   size="small"
                   color="secondary"
                   onClick={handleAddClick}
+                  disabled={loading}
                 >
                   <FontAwesomeIcon icon={faPlus} /> &nbsp; Adicionar
                 </Button>
@@ -342,6 +400,7 @@ export default function CadastroMovimentacao() {
                       autoComplete="off"
                       value={input.product_id}
                       onChange={(event) => handleInputChange(event, index)}
+                      disabled={loading}
                     >
                       <MenuItem value="">Selecione...</MenuItem>
                       {productList &&
@@ -370,6 +429,7 @@ export default function CadastroMovimentacao() {
                       autoComplete="off"
                       type="number"
                       value={input.quantity}
+                      disabled={loading}
                       onChange={(event) => {
                         handleInputChange(event, index);
                       }}
@@ -384,6 +444,7 @@ export default function CadastroMovimentacao() {
                     onClick={() => {
                       handleRemoveClick(index);
                     }}
+                    disabled={loading}
                   >
                     <FontAwesomeIcon icon={faTrash} />
                   </Fab>
@@ -401,7 +462,12 @@ export default function CadastroMovimentacao() {
             spacing={2}
           >
             <Grid item>
-              <Button size="large" color="primary" variant="outlined">
+              <Button
+                size="large"
+                color="primary"
+                variant="outlined"
+                onClick={handleCancel}
+              >
                 <FontAwesomeIcon icon={faBan} />
                 &nbsp; Cancelar
               </Button>
