@@ -13,9 +13,9 @@ const menuList = [
     link: '/admin'
   },
   {
-    title: 'Estoque',
+    title: 'Movimentações',
     icon: faBox,
-    link: '/admin/estoque'
+    link: '/admin/movimentacoes'
   },
   {
     title: 'Produtos',

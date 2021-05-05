@@ -1,8 +1,4 @@
-interface productMetaDateTime {
-  created_on: string
-  updated_on: string
-}
-
+import metaData from "./metadata";
 export default interface Provider {
   id?: number
   name: string
@@ -10,5 +6,5 @@ export default interface Provider {
   phone_number: string
   email: string,
   contact_name: string,
-  metadatetime?: productMetaDateTime
+  metadatetime?: metaData
 }

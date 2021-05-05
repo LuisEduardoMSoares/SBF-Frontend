@@ -10,7 +10,7 @@ import createCache from '@emotion/cache';
 // Styles
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
-import theme from 'theme';
+import theme from 'styles/theme';
 
 import MessagesProvider from 'contexts/messages';
 import Messages from 'components/messages'

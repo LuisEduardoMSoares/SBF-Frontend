@@ -2,7 +2,7 @@ import React from 'react';
 import useMessages from 'hooks/useMessages';
 
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
-import { Alert } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dialog: {
-      zIndex: 1001,
+      zIndex: 600,
     },
     dialogTitle: {
       padding: 0,
@@ -59,6 +59,8 @@ export default function Modal() {
           scroll="paper"
           aria-labelledby="scroll-dialog-title"
           className={classes.dialog}
+          fullWidth={true}
+          maxWidth="md"
         >
           { modalTitle && (
             <DialogTitle id="scroll-dialog-title" className={classes.dialogTitle}>
