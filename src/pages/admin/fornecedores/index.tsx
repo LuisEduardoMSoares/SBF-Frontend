@@ -25,6 +25,10 @@ const Cadastro = dynamic(
   { ssr: false }
 )
 
+const TransactionForm = dynamic(
+  () => import("components/movimentacoes/Cadastro")
+);
+
 function Fornecedores() {
   const classes = useStyles();
 
@@ -51,7 +55,7 @@ function Fornecedores() {
       renderCell: (params: GridCellParams) => {
         return (
           <ContextMenu 
-            resourceId={params.getValue('providerId') as Number} 
+            resourceId={params.getValue('providerId') as number} 
             menuOptions={params.value as ContextMenuOption[]} 
           />
         )
@@ -99,6 +103,10 @@ function Fornecedores() {
                 action: handleProviderChange
               },
               {
+                title: 'Adicionar Entrada',
+                action: handleProviderTransactionStart
+              },
+              {
                 title: 'Excluir',
                 action: handleProviderDelete
               }
@@ -119,7 +127,7 @@ function Fornecedores() {
     }).catch(console.error)
   }
 
-  function handleProviderChange(providerId: Number | null) {
+  function handleProviderChange(providerId: number | null) {
     toggleModal({
       title: "Cadastro de Fornecedor",
       content: <Cadastro />,
@@ -128,7 +136,16 @@ function Fornecedores() {
     });
   }
 
-  async function handleProviderDelete(providerId: Number) {
+  function handleProviderTransactionStart(providerId: number) {
+    toggleModal({
+      title: "Adicionar Movimentação",
+      content: <TransactionForm />,
+      route: "add-transaction",
+      params: { providerId },
+    });
+  }
+
+  async function handleProviderDelete(providerId: number) {
     const provider = providerList.find(item => item.id === providerId );
 
     if(provider) {

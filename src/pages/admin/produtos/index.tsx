@@ -22,26 +22,60 @@ import ContextMenu, { ContextMenuOption } from "components/contextMenu";
 
 const ProductForm = dynamic(() => import("components/produtos/Cadastro"));
 
+const TransactionForm = dynamic(
+  () => import("components/movimentacoes/Cadastro")
+);
+
 function Produtos() {
   const classes = useStyles();
 
   function defineCellClass(params: GridCellClassParams) {
-    return params.rowIndex % 2 === 0 ? classes.rowodd : classes.roweven
+    return params.rowIndex % 2 === 0 ? classes.rowodd : classes.roweven;
   }
-  
+
   const productColumns: GridColDef[] = [
-    { field: "productId", headerName: "ID", width: 80, headerClassName: classes.head, cellClassName: defineCellClass},
-    { field: "productName", headerName: "Nome", flex: 2, headerClassName: classes.head, cellClassName: defineCellClass },
-    { field: "size", headerName: "Tamanho", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
-    { field: "inventory", headerName: "Quantidade", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
-    { field: "weight", headerName: "Peso", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
+    {
+      field: "productId",
+      headerName: "ID",
+      width: 80,
+      headerClassName: classes.head,
+      cellClassName: defineCellClass,
+    },
+    {
+      field: "productName",
+      headerName: "Nome",
+      flex: 2,
+      headerClassName: classes.head,
+      cellClassName: defineCellClass,
+    },
+    {
+      field: "size",
+      headerName: "Tamanho",
+      flex: 1,
+      headerClassName: classes.head,
+      cellClassName: defineCellClass,
+    },
+    {
+      field: "inventory",
+      headerName: "Quantidade",
+      flex: 1,
+      headerClassName: classes.head,
+      cellClassName: defineCellClass,
+    },
+    {
+      field: "weight",
+      headerName: "Peso",
+      flex: 1,
+      headerClassName: classes.head,
+      cellClassName: defineCellClass,
+    },
     {
       field: "updatedOn",
       type: "dateTime",
       headerName: "Últ. Atualização",
       flex: 1,
       headerClassName: classes.head,
-      cellClassName: defineCellClass
+      cellClassName: defineCellClass,
     },
     {
       field: "actions",
@@ -50,12 +84,12 @@ function Produtos() {
       cellClassName: defineCellClass,
       renderCell: (params: GridCellParams) => {
         return (
-          <ContextMenu 
-            resourceId={params.getValue('productId') as Number} 
-            menuOptions={params.value as ContextMenuOption[]} 
+          <ContextMenu
+            resourceId={params.getValue("productId") as Number}
+            menuOptions={params.value as ContextMenuOption[]}
           />
-        )
-      }
+        );
+      },
     },
   ];
 
@@ -66,7 +100,7 @@ function Produtos() {
   const [loading, setLoading] = useState<boolean>(false);
   const [rowCount, setRowCount] = useState<number>(0);
   const [name, setName] = useState<string>("");
-  var productList: Product[]
+  var productList: Product[];
 
   useEffect(() => {
     fetchProductList();
@@ -74,7 +108,8 @@ function Produtos() {
 
   async function fetchProductList() {
     setLoading(true);
-    await productService.fetch({ page, pageSize, name })
+    await productService
+      .fetch({ page, pageSize, name })
       .then((response) => {
         productList = response.records;
         setLoading(false);
@@ -89,20 +124,20 @@ function Produtos() {
                     : product.metadatetime.created_on
                 )
               : null;
-            let actions:ContextMenuOption[] = [
+            let actions: ContextMenuOption[] = [
               {
-                title: 'Alterar',
-                action: handleProductChange
-              },
-              {  
-                title: 'Entrada/Saída',
-                action: handleProductMove
+                title: "Alterar",
+                action: handleProductChange,
               },
               {
-                title: 'Excluir',
-                action: handleProductDelete
-              }
-            ]
+                title: "Entrada/Saída",
+                action: handleProductTransactionStart,
+              },
+              {
+                title: "Excluir",
+                action: handleProductDelete,
+              },
+            ];
             return {
               id,
               productId: id,
@@ -115,7 +150,8 @@ function Produtos() {
             };
           })
         );
-    }).catch(console.error)
+      })
+      .catch(console.error);
   }
 
   function handleProductChange(productId: Number | null) {
@@ -123,18 +159,23 @@ function Produtos() {
       title: "Cadastro de Produto",
       content: <ProductForm />,
       route: !productId ? "add" : `update/${productId}`,
-      params: { productId, afterProductSave: fetchProductList},
+      params: { productId, afterProductSave: fetchProductList },
     });
   }
 
-  function handleProductMove(productId: Number) {
-    console.log("productMoveCalled", productId);
+  function handleProductTransactionStart(productId: Number) {
+    toggleModal({
+      title: "Movimentação",
+      content: <TransactionForm />,
+      route: "add-transaction",
+      params: { productId, afterTransactionSave: fetchProductList },
+    });
   }
 
   async function handleProductDelete(productId: Number) {
-    const product = productList.find(item => item.id === productId );
+    const product = productList.find((item) => item.id === productId);
 
-    if(product) {
+    if (product) {
       await Swal.fire({
         showCancelButton: true,
         title: "Excluir Cadastro?",
@@ -149,7 +190,7 @@ function Produtos() {
           productService
             .delete(product)
             .then((deletedProduct: Product) => {
-              fetchProductList()
+              fetchProductList();
               Swal.fire({
                 title: "Sucesso!",
                 html: `<b>${deletedProduct.name} (${deletedProduct.size})</b> excluído com sucesso!`,
@@ -195,27 +236,26 @@ function Produtos() {
       />
 
       <Box my={4}>
-        
-          <DataGrid
-            autoHeight={true}
-            page={page}
-            onPageChange={(params) => {
-              setPage(params.page);
-            }}
-            onPageSizeChange={(params) => {
-              setPage(0);
-              setPageSize(params.pageSize);
-            }}
-            paginationMode="server"
-            rowCount={rowCount}
-            rows={productRows}
-            columns={productColumns}
-            pagination
-            loading={loading}
-            pageSize={pageSize}
-            disableColumnMenu={true}
-            rowsPerPageOptions={[3, 5, 10, 20, 50, 100]}
-          />
+        <DataGrid
+          autoHeight={true}
+          page={page}
+          onPageChange={(params) => {
+            setPage(params.page);
+          }}
+          onPageSizeChange={(params) => {
+            setPage(0);
+            setPageSize(params.pageSize);
+          }}
+          paginationMode="server"
+          rowCount={rowCount}
+          rows={productRows}
+          columns={productColumns}
+          pagination
+          loading={loading}
+          pageSize={pageSize}
+          disableColumnMenu={true}
+          rowsPerPageOptions={[3, 5, 10, 20, 50, 100]}
+        />
       </Box>
     </>
   );
@@ -233,7 +273,7 @@ const useStyles = makeStyles((theme) => ({
   },
   roweven: {
     backgroundColor: theme.palette.action.hover,
-  }
+  },
 }));
 
 export default withGuard(Produtos);

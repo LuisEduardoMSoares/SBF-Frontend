@@ -10,7 +10,8 @@ export default class TransactionService {
 
       return newTransaction
     } catch (error) {
-      throw new Error(error.response.data.message);
+      const errorMessage = error.response.data.detail.map(({loc, msg}: any) => ` ${loc[loc.length-1]} - ${msg}`)
+      throw new Error(errorMessage);
     }
   }
 
