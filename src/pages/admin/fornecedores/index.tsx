@@ -33,7 +33,7 @@ function Fornecedores() {
   const classes = useStyles();
 
   const providerColumns: GridColDef[] = [
-    { field: "providerId", headerName: "ID", width: 80, headerClassName: classes.head, cellClassName: defineCellClass},
+    { field: "providerId", headerName: "ID", width: 80, headerClassName: classes.head, cellClassName: defineCellClass },
     { field: "name", headerName: "Nome", flex: 2, headerClassName: classes.head, cellClassName: defineCellClass },
     { field: "cnpj", headerName: "CNPJ", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
     { field: "phone_number", headerName: "Telefone", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
@@ -54,9 +54,9 @@ function Fornecedores() {
       cellClassName: defineCellClass,
       renderCell: (params: GridCellParams) => {
         return (
-          <ContextMenu 
-            resourceId={params.getValue('providerId') as number} 
-            menuOptions={params.value as ContextMenuOption[]} 
+          <ContextMenu
+            resourceId={params.getValue('providerId') as number}
+            menuOptions={params.value as ContextMenuOption[]}
           />
         )
       }
@@ -93,9 +93,9 @@ function Fornecedores() {
             let updatedOn = provider.metadatetime
               ? new Date(
                 provider.metadatetime.updated_on
-                    ? provider.metadatetime.updated_on
-                    : provider.metadatetime.created_on
-                )
+                  ? provider.metadatetime.updated_on
+                  : provider.metadatetime.created_on
+              )
               : null;
             let actions: ContextMenuOption[] = [
               {
@@ -124,15 +124,15 @@ function Fornecedores() {
             };
           })
         );
-    }).catch(console.error)
+      }).catch(console.error)
   }
 
   function handleProviderChange(providerId: number | null) {
     toggleModal({
-      title: "Cadastro de Fornecedor",
+      title: !providerId ? "Cadastro de Fornecedor" : "Alteração de Fornecedor",
       content: <Cadastro />,
       route: !providerId ? "add" : `update/${providerId}`,
-      params: { providerId, afterProviderSave: fetchProviderList},
+      params: { providerId, afterProviderSave: fetchProviderList },
     });
   }
 
@@ -146,9 +146,9 @@ function Fornecedores() {
   }
 
   async function handleProviderDelete(providerId: number) {
-    const provider = providerList.find(item => item.id === providerId );
+    const provider = providerList.find(item => item.id === providerId);
 
-    if(provider) {
+    if (provider) {
       await Swal.fire({
         showCancelButton: true,
         title: "Excluir Cadastro?",
@@ -205,25 +205,25 @@ function Fornecedores() {
 
       <Box my={4}>
         <DataGrid
-            autoHeight={true}
-            page={page}
-            onPageChange={(params) => {
-              setPage(params.page);
-            }}
-            onPageSizeChange={(params) => {
-              setPage(0);
-              setPageSize(params.pageSize);
-            }}
-            paginationMode="server"
-            rowCount={rowCount}
-            rows={providerRows}
-            columns={providerColumns}
-            pagination
-            loading={loading}
-            pageSize={pageSize}
-            disableColumnMenu={true}
-            rowsPerPageOptions={[3, 5, 10, 20, 50, 100]}
-          />
+          autoHeight={true}
+          page={page}
+          onPageChange={(params) => {
+            setPage(params.page);
+          }}
+          onPageSizeChange={(params) => {
+            setPage(0);
+            setPageSize(params.pageSize);
+          }}
+          paginationMode="server"
+          rowCount={rowCount}
+          rows={providerRows}
+          columns={providerColumns}
+          pagination
+          loading={loading}
+          pageSize={pageSize}
+          disableColumnMenu={true}
+          rowsPerPageOptions={[3, 5, 10, 20, 50, 100]}
+        />
       </Box>
     </>
   );

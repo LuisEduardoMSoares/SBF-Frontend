@@ -93,7 +93,7 @@ export default function CadastroMovimentacao() {
     productId,
     providerId,
     afterTransactionSave,
-  }: { productId?: number; providerId?: number,  afterTransactionSave?: any } = modalParams;
+  }: { productId?: number; providerId?: number, afterTransactionSave?: any } = modalParams;
   const transactionService = new TransactionService();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -230,7 +230,7 @@ export default function CadastroMovimentacao() {
       providerService.list().then((response) => {
         setProviderList(response);
 
-        if(providerId) {
+        if (providerId) {
           setTransactionType("ENTRADA")
           setTransactionProviderId(`${providerId}`);
         }

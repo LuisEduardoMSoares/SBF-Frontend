@@ -1,5 +1,5 @@
-import React, {FormEvent, useEffect, useState} from 'react'
-import {Button, Container, createStyles, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
+import React, { FormEvent, useEffect, useState } from 'react'
+import { Button, Container, createStyles, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import Grid from '@material-ui/core/Grid'
 import { faBan, faSave, faTruckMoving } from '@fortawesome/free-solid-svg-icons'
@@ -8,8 +8,8 @@ import useModal from 'hooks/useModal';
 import Swal from 'sweetalert2';
 import Provider from 'models/provider';
 import providerService from 'services/providerService';
-import {cnpj as cnpjValidator} from 'cpf-cnpj-validator';
-import {emailValidator} from 'utils/functions'
+import { cnpj as cnpjValidator } from 'cpf-cnpj-validator';
+import { emailValidator } from 'utils/functions'
 import { useRouter } from 'next/router';
 
 
@@ -38,13 +38,13 @@ export default function CadastroFornecedor() {
 
   const [provider, setProvider] = useState<Provider>(initialProviderState);
 
-  const [ name, setName ] = useState<string>('')
-  const [ cnpj, setCnpj ] = useState<string>('')
-  const [ phoneNumber, setPhoneNumber ] = useState<string>('')
-  const [ email, setEmail ] = useState<string>('')
-  const [ contactName, setContactName ] = useState<string>('')
-  const [ message, setMessage ] = useState<string>('');
-  const [ isOpen, setIsOpen ] = useState<boolean>(false);
+  const [name, setName] = useState<string>('')
+  const [cnpj, setCnpj] = useState<string>('')
+  const [phoneNumber, setPhoneNumber] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [contactName, setContactName] = useState<string>('')
+  const [message, setMessage] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const classes = useStyles()
   const { toggleModal, modalParams } = useModal();
@@ -90,11 +90,11 @@ export default function CadastroFornecedor() {
       text: 'Fornecedor cadastrado com sucesso!'
     })
     toggleModal({});
-    router.push('/admin/fornecedores',undefined,{shallow: true})
+    router.push('/admin/fornecedores', undefined, { shallow: true })
   }
 
   function handleCancel() {
-    if(formChanged) {
+    if (formChanged) {
       Swal.fire({
         showCancelButton: true,
         title: "Cancelar Cadastro",
@@ -120,12 +120,13 @@ export default function CadastroFornecedor() {
       </Snackbar>
       <Container max-width="ls">
         <Typography variant="h4" component="h1" color="primary" className={classes.formTitle}>
-          <FontAwesomeIcon icon={faTruckMoving} /> { !name ? 'Cadastro de Fornecedor' : name }
+          <FontAwesomeIcon icon={faTruckMoving} /> {!providerId ? 'Cadastro de Fornecedor' : name}
         </Typography>
 
         <form noValidate onSubmit={handleSubmit}>
           <TextField
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             required
             fullWidth
@@ -134,12 +135,13 @@ export default function CadastroFornecedor() {
             name="name"
             autoComplete="off"
             autoFocus
-            onChange={ event => setName(event.target.value) }
+            onChange={event => setName(event.target.value)}
             value={name}
           />
 
           <TextField
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             required
             fullWidth
@@ -147,13 +149,14 @@ export default function CadastroFornecedor() {
             label="Nome do contato"
             name="contact"
             autoComplete="off"
-            onChange={ event => setContactName(event.target.value) }
+            onChange={event => setContactName(event.target.value)}
             value={contactName}
           />
 
           <TextField
             type="email"
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             required
             fullWidth
@@ -161,7 +164,7 @@ export default function CadastroFornecedor() {
             label="E-mail"
             name="email"
             autoComplete="off"
-            onChange={ event => setEmail(event.target.value) }
+            onChange={event => setEmail(event.target.value)}
             value={email}
             onBlur={event => {
               if (emailValidator(event.target.value)) {
@@ -174,7 +177,8 @@ export default function CadastroFornecedor() {
           />
 
           <TextField
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             type="number"
             required
@@ -183,7 +187,7 @@ export default function CadastroFornecedor() {
             label="CNPJ"
             name="cnpj"
             autoComplete="off"
-            onChange={ event => setCnpj(event.target.value) }
+            onChange={event => setCnpj(event.target.value)}
             onBlur={event => {
               if (!cnpjValidator.isValid(event.target.value)) {
                 setIsOpen(true);
@@ -195,7 +199,8 @@ export default function CadastroFornecedor() {
             value={cnpj}
           />
           <TextField
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             type="phone"
             required
@@ -204,7 +209,7 @@ export default function CadastroFornecedor() {
             label="Telefone"
             name="phone"
             autoComplete="off"
-            onChange={ event => setPhoneNumber(event.target.value) }
+            onChange={event => setPhoneNumber(event.target.value)}
             value={phoneNumber}
           />
 
@@ -214,17 +219,21 @@ export default function CadastroFornecedor() {
             justify="flex-end"
             alignItems="center"
             className={classes.formActions}
+            spacing={1}
           >
-            <Grid item xs={3}>
-              <Button size="large" color="secondary" onClick={handleCancel}>
+            <Grid item>
+              <Button size="large"
+                color="primary"
+                variant="outlined"
+                onClick={handleCancel}>
                 <FontAwesomeIcon icon={faBan} />&nbsp;
                 Cancelar
               </Button>
             </Grid>
-            <Grid item xs={4}>
-              <Button variant="contained" size="large" color="secondary" type="submit">
-                <FontAwesomeIcon icon={faSave} /> &nbsp; 
-                Cadastrar
+            <Grid item>
+              <Button variant="contained" size="large" color="primary" type="submit">
+                <FontAwesomeIcon icon={faSave} /> &nbsp;
+                {!providerId ? "Cadastrar" : "Alterar"}
               </Button>
             </Grid>
           </Grid>

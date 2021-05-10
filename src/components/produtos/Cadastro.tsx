@@ -73,7 +73,7 @@ export default function CadastroProdutos() {
   async function handleProductSave($event: FormEvent) {
     $event.preventDefault();
 
-    if(isFormChanged) {
+    if (isFormChanged) {
 
       const newProduct: Product = {
         id: productId,
@@ -89,7 +89,7 @@ export default function CadastroProdutos() {
 
       //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
       Swal.fire({
-        title: "Sucesso!", 
+        title: "Sucesso!",
         html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
         icon: "success"
       });
@@ -134,12 +134,13 @@ export default function CadastroProdutos() {
           className={classes.formTitle}
         >
           <FontAwesomeIcon icon={faTshirt} />{" "}
-          {!name ? "Cadastro de Produto" : name}
+          {!productId ? "Cadastro de Produto" : name}
         </Typography>
 
         <form noValidate onSubmit={handleProductSave}>
           <TextField
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             required
             fullWidth
@@ -153,7 +154,8 @@ export default function CadastroProdutos() {
           />
 
           <TextField
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             required
             fullWidth
@@ -167,10 +169,12 @@ export default function CadastroProdutos() {
 
           <TextField
             type="number"
-            variant="filled"
+            variant="outlined"
+            size="small"
             margin="normal"
             required
             fullWidth
+            disabled={productId ? true : false}
             id="inventory"
             label="Quantidade"
             name="inventory"
@@ -180,7 +184,9 @@ export default function CadastroProdutos() {
           />
 
           <TextField
-            variant="filled"
+            color="primary"
+            variant="outlined"
+            size="small"
             margin="normal"
             type="number"
             required
@@ -214,20 +220,23 @@ export default function CadastroProdutos() {
             className={classes.formActions}
             spacing={1}
           >
-            <Grid item xs={3}>
-              <Button size="large" color="secondary" onClick={handleCancel}>
+            <Grid item>
+              <Button size="large"
+                color="primary"
+                variant="outlined"
+                onClick={handleCancel}>
                 <FontAwesomeIcon icon={faBan} />
                 &nbsp; Cancelar
               </Button>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item>
               <Button
                 variant="contained"
                 size="large"
-                color="secondary"
+                color="primary"
                 type="submit"
               >
-                <FontAwesomeIcon icon={faSave} /> &nbsp; Cadastrar
+                <FontAwesomeIcon icon={faSave} /> &nbsp; {productId ? "Alterar" : "Cadastrar"}
               </Button>
             </Grid>
           </Grid>

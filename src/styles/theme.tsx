@@ -1,5 +1,7 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
+// Translate
+import { ptBR } from '@material-ui/core/locale';
 
 // Create a theme instance.
 const theme = createMuiTheme({
@@ -32,7 +34,7 @@ const theme = createMuiTheme({
       '"Segoe UI Symbol"',
     ].join(','),
   }
-});
+}, ptBR);
 
 theme.typography.button = {
   ...theme.typography.button,

@@ -119,10 +119,10 @@ function Produtos() {
             const { id, name: productName, size, inventory, weight } = product;
             let updatedOn = product.metadatetime
               ? new Date(
-                  product.metadatetime.updated_on
-                    ? product.metadatetime.updated_on
-                    : product.metadatetime.created_on
-                )
+                product.metadatetime.updated_on
+                  ? product.metadatetime.updated_on
+                  : product.metadatetime.created_on
+              )
               : null;
             let actions: ContextMenuOption[] = [
               {
@@ -156,7 +156,7 @@ function Produtos() {
 
   function handleProductChange(productId: Number | null) {
     toggleModal({
-      title: "Cadastro de Produto",
+      title: productId ? "Alteração do produto" : "Cadastro de Produto",
       content: <ProductForm />,
       route: !productId ? "add" : `update/${productId}`,
       params: { productId, afterProductSave: fetchProductList },

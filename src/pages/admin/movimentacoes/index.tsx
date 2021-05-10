@@ -97,10 +97,10 @@ function Movimentacoes() {
 
             let updatedOn = transaction.metadatetime
               ? new Date(
-                  transaction.metadatetime.updated_on
-                    ? transaction.metadatetime.updated_on
-                    : transaction.metadatetime.created_on
-                )
+                transaction.metadatetime.updated_on
+                  ? transaction.metadatetime.updated_on
+                  : transaction.metadatetime.created_on
+              )
               : undefined;
 
             let actions: ContextMenuOption[] = [

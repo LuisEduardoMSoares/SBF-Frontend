@@ -27,8 +27,8 @@ faConfig.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automat
 import NProgress from 'nprogress'; //nprogress module
 import 'styles/nprogress.scss'; //styles of nprogress
 
-Router.events.on('routeChangeStart',() => NProgress.start())
-Router.events.on('routeChangeComplete',() => NProgress.done())
+Router.events.on('routeChangeStart', () => NProgress.start())
+Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
 export const cache = createCache({ key: 'css', prepend: true });

@@ -35,7 +35,7 @@ export default function ProductDetailRow({ row }: any) {
   const [loading, _setLoading] = useState<boolean>(false)
 
   const productColumns: GridColDef[] = [
-    { field: "id", headerName: "ID do Produto", width: 220, headerClassName: classes.head, cellClassName: defineCellClass},
+    { field: "id", headerName: "ID do Produto", width: 220, headerClassName: classes.head, cellClassName: defineCellClass },
     { field: "quantity", headerName: "Quantidade", flex: 1, headerClassName: classes.head, cellClassName: defineCellClass },
   ]
   if (row.products) {
