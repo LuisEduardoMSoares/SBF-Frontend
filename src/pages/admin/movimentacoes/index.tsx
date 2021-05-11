@@ -41,6 +41,7 @@ interface transactionRow {
   type: string;
   description?: string;
   providerId?: string | number;
+  providerName?: string;
   products?: transactionProduct[];
   updatedOn?: Date;
   actions?: ContextMenuOption[];
@@ -86,6 +87,7 @@ function Movimentacoes() {
               type,
               description,
               provider_id,
+              provider_name,
               products,
             } = transaction;
 
@@ -115,6 +117,7 @@ function Movimentacoes() {
               type,
               description,
               providerId: provider_id || "-",
+              providerName: provider_name || "-",
               products: transactionProducts,
               updatedOn,
               actions,
@@ -130,14 +133,14 @@ function Movimentacoes() {
     { name: "date", title: "Data", width: 50 },
     { name: "type", title: "Tipo" },
     { name: "description", title: "Descrição" },
-    { name: "providerId", title: "Fornecedor" },
+    { name: "providerName", title: "Fornecedor" },
     { name: "updatedOn", title: "Últ. Atualização" },
   ]);
   const [tableColumnExtensions] = useState([
     { columnName: 'date', width: 140 },
     { columnName: 'type', width: 140 },
     { columnName: 'description', width: 'auto' },
-    { columnName: 'providerId', width: 200 },
+    { columnName: 'providerName', width: 200 },
     { columnName: 'updatedOn', width: 180 },
   ]);
   const [transactionRows, setTransactionRows] = useState<transactionRow[]>([]);
