@@ -16,6 +16,7 @@ import useModal from "hooks/useModal";
 import Swal from "sweetalert2";
 import Product from "models/product";
 import productService from "services/productService";
+import { validatePattern, validatorsPatternList } from "utils/validators";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,6 +37,32 @@ const initialProductState: Product = {
   weight: 0,
 };
 
+interface productValidate {
+  isOk: boolean,
+  messageError: string[]
+}
+
+function productValidation(product: Product): productValidate {
+  let isOk = true;
+  const listMessagesError = [];
+  if (!validatePattern(validatorsPatternList.name, product.name)) {
+    isOk = false;
+    listMessagesError.push('Nome do produto inválido, informe um nome com ao menos com 3 caracteres.');
+  }
+  if (!validatePattern(validatorsPatternList.productSize, product.size)) {
+    isOk = false;
+    listMessagesError.push('Tamanho do produto inválido.');
+  }
+  if (product.inventory < 0) {
+    isOk = false;
+    listMessagesError.push('Quantidade do produto inválida. Informe 0 ou mais.');
+  }
+  return {
+    isOk,
+    messageError: listMessagesError
+  };
+}
+
 export default function CadastroProdutos() {
   const [product, setProduct] = useState<Product>(initialProductState);
   const [name, setName] = useState<string>("");
@@ -48,7 +75,6 @@ export default function CadastroProdutos() {
   const { productId, afterProductSave } = modalParams;
 
   useEffect(() => {
-    console.log("Product ID changed: ", productId);
 
     if (productId) {
       productService
@@ -82,19 +108,27 @@ export default function CadastroProdutos() {
         size,
         weight,
       };
+      const validation = productValidation(newProduct);
+      if (validation.isOk) {
+        await productService.save(newProduct).then(() => {
+          afterProductSave()
+        });
 
-      await productService.save(newProduct).then(() => {
-        afterProductSave()
-      });
+        //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
+        Swal.fire({
+          title: "Sucesso!",
+          html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
+          icon: "success"
+        });
 
-      //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
-      Swal.fire({
-        title: "Sucesso!",
-        html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
-        icon: "success"
-      });
-
-      toggleModal({})
+        toggleModal({})
+      } else {
+        Swal.fire({
+          title: 'Foram encontrados os seguintes erros no cadastro',
+          html: `${validation.messageError.join('<br>')}`,
+          icon: 'error'
+        });
+      }
     } else {
       Swal.fire({
         text: "Nada foi alterado",

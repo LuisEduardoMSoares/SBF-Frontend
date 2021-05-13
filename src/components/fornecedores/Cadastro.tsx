@@ -8,9 +8,8 @@ import useModal from 'hooks/useModal';
 import Swal from 'sweetalert2';
 import Provider from 'models/provider';
 import providerService from 'services/providerService';
-import { cnpj as cnpjValidator } from 'cpf-cnpj-validator';
-import { emailValidator } from 'utils/functions'
 import { useRouter } from 'next/router';
+import { validatePattern, validatorsPatternList } from 'utils/validators';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,6 +32,40 @@ const initialProviderState: Provider = {
   email: ""
 };
 
+interface providerValidate {
+  isOk: boolean,
+  messageError: string[]
+}
+
+function providerValidation(provider: Provider): providerValidate {
+  let isOk = true;
+  const listMessagesError = [];
+  if (!validatePattern(validatorsPatternList.cnpj, provider.cnpj)) {
+    isOk = false;
+    listMessagesError.push('CNPJ inválido');
+  }
+  if (!validatePattern(validatorsPatternList.email, provider.email)) {
+    isOk = false;
+    listMessagesError.push('E-mail inválido');
+  }
+  if (!validatePattern(validatorsPatternList.name, provider.contact_name)) {
+    isOk = false;
+    listMessagesError.push('Nome do contato inválido');
+  }
+  if (!validatePattern(validatorsPatternList.name, provider.name)) {
+    isOk = false;
+    listMessagesError.push('Nome do fornecedor inválido');
+  }
+  if (!validatePattern(validatorsPatternList.phone, provider.phone_number)) {
+    isOk = false;
+    listMessagesError.push('Telefone inválido');
+  }
+  return {
+    isOk,
+    messageError: listMessagesError
+  };
+}
+
 export default function CadastroFornecedor() {
   const router = useRouter();
 
@@ -51,8 +84,6 @@ export default function CadastroFornecedor() {
   const { providerId, afterProviderSave } = modalParams;
 
   useEffect(() => {
-    console.log("Provider ID changed: ", providerId);
-
     if (providerId) {
       providerService
         .getOne(providerId)
@@ -82,15 +113,24 @@ export default function CadastroFornecedor() {
       contact_name: contactName
     }
 
-    await providerService.insert(newProvider).then(() => {
-      afterProviderSave();
-    });
+    const validation = providerValidation(newProvider);
+    if (validation.isOk) {
+      await providerService.insert(newProvider).then(() => {
+        afterProviderSave();
+      });
 
-    Swal.fire({
-      text: 'Fornecedor cadastrado com sucesso!'
-    })
-    toggleModal({});
-    router.push('/admin/fornecedores', undefined, { shallow: true })
+      Swal.fire({
+        text: 'Fornecedor cadastrado com sucesso!'
+      })
+      toggleModal({});
+      router.push('/admin/fornecedores', undefined, { shallow: true });
+    } else {
+      Swal.fire({
+        title: 'Foram encontrados os seguintes erros no cadastro',
+        html: `${validation.messageError.join('<br>')}`,
+        icon: 'error'
+      });
+    }
   }
 
   function handleCancel() {
@@ -166,14 +206,6 @@ export default function CadastroFornecedor() {
             autoComplete="off"
             onChange={event => setEmail(event.target.value)}
             value={email}
-            onBlur={event => {
-              if (emailValidator(event.target.value)) {
-                setIsOpen(false);
-              } else {
-                setMessage('Atenção, E-mail inválido');
-                setIsOpen(true);
-              }
-            }}
           />
 
           <TextField
@@ -188,14 +220,6 @@ export default function CadastroFornecedor() {
             name="cnpj"
             autoComplete="off"
             onChange={event => setCnpj(event.target.value)}
-            onBlur={event => {
-              if (!cnpjValidator.isValid(event.target.value)) {
-                setIsOpen(true);
-                setMessage('Atenção, CNPJ inválido');
-              } else {
-                setIsOpen(false);
-              }
-            }}
             value={cnpj}
           />
           <TextField
