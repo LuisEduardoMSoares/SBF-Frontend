@@ -2,13 +2,12 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import { Button, Container, createStyles, makeStyles, Snackbar, TextField, Theme, Typography } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import Grid from '@material-ui/core/Grid'
-import { faBan, faSave, faTruckMoving } from '@fortawesome/free-solid-svg-icons'
+import { faBan, faSave, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useModal from 'hooks/useModal';
-import Swal from 'sweetalert2';
-import Provider from 'models/provider';
-import providerService from 'services/providerService';
-import { cnpj as cnpjValidator } from 'cpf-cnpj-validator';
+import useModal from 'hooks/useModal'
+import Swal from 'sweetalert2'
+import User from 'models/user'
+import userService from 'services/userService'
 import { emailValidator } from 'utils/functions'
 
 
@@ -22,75 +21,74 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(3)
     }
   })
-);
+)
 
-const initialProviderState: Provider = {
-  name: "",
-  cnpj: "",
-  contact_name: "",
-  phone_number: "",
-  email: ""
-};
+const initialUserState: User = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  password: ""
+}
 
-export default function CadastroFornecedor() {
+export default function CadastroUsuario() {
 
-  const [provider, setProvider] = useState<Provider>(initialProviderState);
+  const [user, setUser] = useState<User>(initialUserState)
 
-  const [name, setName] = useState<string>('')
-  const [cnpj, setCnpj] = useState<string>('')
-  const [phoneNumber, setPhoneNumber] = useState<string>('')
+  const [firstName, setFirstName] = useState<string>('')
+  const [lastName, setLastName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
-  const [contactName, setContactName] = useState<string>('')
-  const [message, setMessage] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const classes = useStyles()
-  const { toggleModal, modalParams } = useModal();
-  const { providerId, afterProviderSave } = modalParams;
+  const { toggleModal, modalParams } = useModal()
+  const { userId, afterUserSave } = modalParams
 
   useEffect(() => {
-    console.log("Provider ID changed: ", providerId);
+    console.log("User ID changed: ", userId)
 
-    if (providerId) {
-      providerService
-        .getOne(providerId)
-        .then((provider: Provider) => {
-          setProvider(provider);
-          setName(provider.name);
-          setCnpj(provider.cnpj);
-          setContactName(provider.contact_name);
-          setEmail(provider.email);
-          setPhoneNumber(provider.phone_number);
+    if (userId) {
+      userService
+        .getOne(userId)
+        .then((user: User) => {
+          setUser(user)
+          setFirstName(user.first_name)
+          setLastName(user.last_name)
+          setEmail(user.email)
+          setPassword("")
         })
-        .catch(console.error);
+        .catch(console.error)
     }
-  }, [modalParams]);
+  }, [modalParams])
 
-  const formChanged = name != provider.name || phoneNumber != provider.phone_number || cnpj != provider.cnpj || email != provider.email || contactName != provider.contact_name
+  const formChanged = 
+    firstName != user.first_name
+    || lastName != user.last_name
+    || email != user.email
+
 
   async function handleSubmit($event: FormEvent) {
-    $event.preventDefault();
+    $event.preventDefault()
 
-    const newProvider: Provider = {
-      id: providerId,
-      name,
-      cnpj,
-      phone_number: phoneNumber,
+    const newUser: User = {
+      id: userId,
+      first_name: firstName,
+      last_name: lastName,
       email,
-      contact_name: contactName
+      password
     }
 
-    await providerService.insert(newProvider).then(() => {
-      afterProviderSave();
-    });
+    await userService.save(newUser).then(() => {
+      afterUserSave()
+    })
 
     Swal.fire({
       title: "Sucesso!",
-      html: `Fornecedor <b>${name}</b> ${providerId ? 'modificado' : 'cadastrado'} com sucesso!`,
+      html: `Perfil de <b>${firstName} ${lastName}</b> ${userId ? 'modificado' : 'cadastrado'} com sucesso!`,
       icon: "success"
     });
-
-    toggleModal({});
+    toggleModal({})
   }
 
   function handleCancel() {
@@ -120,23 +118,23 @@ export default function CadastroFornecedor() {
       </Snackbar>
       <Container max-width="ls">
         <Typography variant="h4" component="h1" color="primary" className={classes.formTitle}>
-          <FontAwesomeIcon icon={faTruckMoving} /> {!providerId ? 'Cadastro de Fornecedor' : name}
+          <FontAwesomeIcon icon={faUser} /> {!userId ? 'Cadastro de Usuário' : name}
         </Typography>
 
-        <form noValidate onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit} autoComplete="center">
           <TextField
             variant="outlined"
             size="small"
             margin="normal"
             required
             fullWidth
-            id="name"
-            label="Nome do Fornecedor"
-            name="name"
+            id="first_name"
+            label="Nome"
+            name="first_name"
             autoComplete="off"
             autoFocus
-            onChange={event => setName(event.target.value)}
-            value={name}
+            onChange={event => setFirstName(event.target.value)}
+            value={firstName}
           />
 
           <TextField
@@ -145,12 +143,12 @@ export default function CadastroFornecedor() {
             margin="normal"
             required
             fullWidth
-            id="contact"
-            label="Nome do contato"
-            name="contact"
+            id="last_name"
+            label="Sobrenome"
+            name="last_name"
             autoComplete="off"
-            onChange={event => setContactName(event.target.value)}
-            value={contactName}
+            onChange={event => setLastName(event.target.value)}
+            value={lastName}
           />
 
           <TextField
@@ -168,49 +166,27 @@ export default function CadastroFornecedor() {
             value={email}
             onBlur={event => {
               if (emailValidator(event.target.value)) {
-                setIsOpen(false);
+                setIsOpen(false)
               } else {
-                setMessage('Atenção, E-mail inválido');
-                setIsOpen(true);
+                setMessage('Atenção, E-mail inválido')
+                setIsOpen(true)
               }
             }}
           />
 
           <TextField
+            type="password"
             variant="outlined"
             size="small"
             margin="normal"
-            type="number"
             required
             fullWidth
-            id="cnpj"
-            label="CNPJ"
-            name="cnpj"
+            id="password"
+            label="Senha"
+            name="password"
             autoComplete="off"
-            onChange={event => setCnpj(event.target.value)}
-            onBlur={event => {
-              if (!cnpjValidator.isValid(event.target.value)) {
-                setIsOpen(true);
-                setMessage('Atenção, CNPJ inválido');
-              } else {
-                setIsOpen(false);
-              }
-            }}
-            value={cnpj}
-          />
-          <TextField
-            variant="outlined"
-            size="small"
-            margin="normal"
-            type="phone"
-            required
-            fullWidth
-            id="phone"
-            label="Telefone"
-            name="phone"
-            autoComplete="off"
-            onChange={event => setPhoneNumber(event.target.value)}
-            value={phoneNumber}
+            onChange={event => setPassword(event.target.value)}
+            value={password}
           />
 
           <Grid
@@ -233,7 +209,7 @@ export default function CadastroFornecedor() {
             <Grid item>
               <Button variant="contained" size="large" color="primary" type="submit">
                 <FontAwesomeIcon icon={faSave} /> &nbsp;
-                {!providerId ? "Cadastrar" : "Alterar"}
+                {!userId ? "Cadastrar" : "Alterar"}
               </Button>
             </Grid>
           </Grid>

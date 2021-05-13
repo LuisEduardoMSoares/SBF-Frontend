@@ -87,7 +87,6 @@ export default function CadastroProdutos() {
         afterProductSave()
       });
 
-      //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
       Swal.fire({
         title: "Sucesso!",
         html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
