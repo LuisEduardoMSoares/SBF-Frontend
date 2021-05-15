@@ -158,7 +158,7 @@ function Produtos() {
     toggleModal({
       title: productId ? "Alteração do produto" : "Cadastro de Produto",
       content: <ProductForm />,
-      route: !productId ? "add" : `update/${productId}`,
+
       params: { productId, afterProductSave: fetchProductList },
     });
   }
@@ -167,7 +167,6 @@ function Produtos() {
     toggleModal({
       title: "Movimentação",
       content: <TransactionForm />,
-      route: "add-transaction",
       params: { productId, afterTransactionSave: fetchProductList },
     });
   }

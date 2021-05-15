@@ -23,7 +23,7 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    const accessToken = Cookie.get('token')
+    const accessToken = Cookie.get('accessToken')
 
     if(accessToken) {
       router.replace("/admin/")

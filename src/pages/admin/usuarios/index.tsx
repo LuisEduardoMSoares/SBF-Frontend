@@ -153,7 +153,6 @@ function Usuarios() {
     toggleModal({
       title: !userId ? "Cadastro de Usuário" : "Alteração de Usuário",
       content: <Cadastro />,
-      route: !userId ? "add" : `update/${userId}`,
       params: { userId, afterUserSave: fetchUserList },
     });
   }

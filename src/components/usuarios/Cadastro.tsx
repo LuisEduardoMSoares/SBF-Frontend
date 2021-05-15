@@ -8,7 +8,7 @@ import useModal from 'hooks/useModal'
 import Swal from 'sweetalert2'
 import User from 'models/user'
 import userService from 'services/userService'
-import { emailValidator } from 'utils/functions'
+import { emailValidator, passwordValidator } from 'utils/functions'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
     formActions: {
       textAlign: 'right',
       marginTop: theme.spacing(3)
+    },
+    formGrid: {
+      marginTop: 0
     }
   })
 )
@@ -38,6 +41,8 @@ export default function CadastroUsuario() {
   const [lastName, setLastName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [changePassword, setChangePassword] = useState(true);
   const [message, setMessage] = useState<string>('')
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -49,6 +54,7 @@ export default function CadastroUsuario() {
     console.log("User ID changed: ", userId)
 
     if (userId) {
+      setChangePassword(false)
       userService
         .getOne(userId)
         .then((user: User) => {
@@ -57,42 +63,80 @@ export default function CadastroUsuario() {
           setLastName(user.last_name)
           setEmail(user.email)
           setPassword("")
+          setConfirmPassword("")
         })
         .catch(console.error)
     }
   }, [modalParams])
 
-  const formChanged = 
+  const isFormChanged = 
     firstName != user.first_name
     || lastName != user.last_name
     || email != user.email
+    || password != ""
+    || confirmPassword != ""
+  
+  function isFormValid() {
+    const isValid = firstName && lastName && email && ((changePassword && password && confirmPassword) || (!changePassword))
+    if(!isValid) {
+      setMessage("Formulário inválido! Necessário o preenchimento de todos os campos.")
+      setIsOpen(true)
+    } else setIsOpen(false)
+
+    return isValid  
+  }
 
 
   async function handleSubmit($event: FormEvent) {
     $event.preventDefault()
 
-    const newUser: User = {
-      id: userId,
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      password
+    if(isFormChanged) {
+      if(isFormValid()) {
+        if(changePassword && password !== confirmPassword) {
+          Swal.fire({
+            text: "Senha e confirmação de senha diferentes",
+            position: "bottom",
+            timer: 2500,
+            showConfirmButton: true,
+            toast: true,
+          });
+        }
+
+        const newUser: User = {
+          id: userId,
+          first_name: firstName,
+          last_name: lastName,
+          email
+        }
+
+        if(changePassword && password === confirmPassword) {
+          newUser.password = password      
+        }
+
+        await userService.save(newUser).then(() => {
+          toggleModal({})
+          afterUserSave()
+        })
+
+        Swal.fire({
+          title: "Sucesso!",
+          html: `Perfil de <b>${firstName} ${lastName}</b> ${userId ? 'modificado' : 'cadastrado'} com sucesso!`,
+          icon: "success"
+        });
+      }
+    } else {
+      Swal.fire({
+        text: "Altere algo para gravar o usuário",
+        position: "bottom",
+        timer: 2500,
+        showConfirmButton: true,
+        toast: true,
+      });
     }
-
-    await userService.save(newUser).then(() => {
-      afterUserSave()
-    })
-
-    Swal.fire({
-      title: "Sucesso!",
-      html: `Perfil de <b>${firstName} ${lastName}</b> ${userId ? 'modificado' : 'cadastrado'} com sucesso!`,
-      icon: "success"
-    });
-    toggleModal({})
   }
 
   function handleCancel() {
-    if (formChanged) {
+    if (isFormChanged) {
       Swal.fire({
         showCancelButton: true,
         title: "Cancelar Cadastro",
@@ -118,10 +162,10 @@ export default function CadastroUsuario() {
       </Snackbar>
       <Container max-width="ls">
         <Typography variant="h4" component="h1" color="primary" className={classes.formTitle}>
-          <FontAwesomeIcon icon={faUser} /> {!userId ? 'Cadastro de Usuário' : name}
+          <FontAwesomeIcon icon={faUser} /> {!userId ? 'Cadastro de Usuário' : `${firstName} ${lastName}`}
         </Typography>
 
-        <form noValidate onSubmit={handleSubmit} autoComplete="center">
+        <form noValidate onSubmit={handleSubmit} autoComplete={`section-blue-${Math.random()} register-${Math.random()}`}>
           <TextField
             variant="outlined"
             size="small"
@@ -174,20 +218,72 @@ export default function CadastroUsuario() {
             }}
           />
 
-          <TextField
-            type="password"
-            variant="outlined"
-            size="small"
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Senha"
-            name="password"
-            autoComplete="off"
-            onChange={event => setPassword(event.target.value)}
-            value={password}
-          />
+          { !changePassword && (
+            <Button
+              variant="contained"
+              color="secondary" 
+              onClick={() => {setChangePassword(true)}}>Alterar Senha</Button>
+          )}
+          { changePassword && (
+            <Grid
+            container
+            direction="row"
+            alignItems="center"
+            className={classes.formGrid}
+            spacing={2}
+          >
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="password"
+                  variant="outlined"
+                  size="small"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="password"
+                  label="Senha"
+                  name="password"
+                  autoComplete={`section-blue-${Math.random()} register-${Math.random()} new-password`}
+                  onChange={event => setPassword(event.target.value)}
+                  value={password}
+                  error={isFormChanged ? !passwordValidator(password, confirmPassword) : undefined}
+                  onBlur={(event) => {
+                    if (passwordValidator(event.target.value, confirmPassword)) {
+                      setIsOpen(false)
+                    } else {
+                      setMessage('Atenção, senha e confirmação de senha estão diferentes')
+                      setIsOpen(true)
+                    }
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="password"
+                  variant="outlined"
+                  size="small"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="confirmPassword"
+                  label="Confirmação de senha"
+                  name="confirmPassword"
+                  autoComplete={`section-red-${Math.random()} register-${Math.random()} new-password`}
+                  onChange={event => setConfirmPassword(event.target.value)}
+                  value={confirmPassword}
+                  error={isFormChanged ? !passwordValidator(password, confirmPassword) : undefined}
+                  onBlur={(event) => {
+                    if (passwordValidator(password, event.target.value)) {
+                      setIsOpen(false)
+                    } else {
+                      setMessage('Atenção, senha e confirmação de senha estão diferentes')
+                      setIsOpen(true)
+                    }
+                  }}
+                />
+              </Grid>
+            </Grid>
+          )}
 
           <Grid
             container
