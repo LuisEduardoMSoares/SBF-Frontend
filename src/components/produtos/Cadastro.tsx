@@ -114,12 +114,24 @@ export default function CadastroProdutos() {
           afterProductSave()
         });
 
+<<<<<<< HEAD
+      await productService.save(newProduct).then(() => {
+        afterProductSave()
+      });
+
+      Swal.fire({
+        title: "Sucesso!",
+        html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
+        icon: "success"
+      });
+=======
         //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
         Swal.fire({
           title: "Sucesso!",
           html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
           icon: "success"
         });
+>>>>>>> 579aa0e6932b7da8965af33618fc752922b66a88
 
         toggleModal({})
       } else {

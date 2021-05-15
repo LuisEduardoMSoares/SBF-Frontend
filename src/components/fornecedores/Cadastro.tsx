@@ -8,7 +8,6 @@ import useModal from 'hooks/useModal';
 import Swal from 'sweetalert2';
 import Provider from 'models/provider';
 import providerService from 'services/providerService';
-import { useRouter } from 'next/router';
 import { validatePattern, validatorsPatternList } from 'utils/validators';
 
 
@@ -67,7 +66,6 @@ function providerValidation(provider: Provider): providerValidate {
 }
 
 export default function CadastroFornecedor() {
-  const router = useRouter();
 
   const [provider, setProvider] = useState<Provider>(initialProviderState);
 
@@ -123,7 +121,6 @@ export default function CadastroFornecedor() {
         text: 'Fornecedor cadastrado com sucesso!'
       })
       toggleModal({});
-      router.push('/admin/fornecedores', undefined, { shallow: true });
     } else {
       Swal.fire({
         title: 'Foram encontrados os seguintes erros no cadastro',

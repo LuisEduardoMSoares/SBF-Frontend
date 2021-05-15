@@ -131,7 +131,6 @@ function Fornecedores() {
     toggleModal({
       title: !providerId ? "Cadastro de Fornecedor" : "Alteração de Fornecedor",
       content: <Cadastro />,
-      route: !providerId ? "add" : `update/${providerId}`,
       params: { providerId, afterProviderSave: fetchProviderList },
     });
   }
@@ -140,7 +139,6 @@ function Fornecedores() {
     toggleModal({
       title: "Adicionar Movimentação",
       content: <TransactionForm />,
-      route: "add-transaction",
       params: { providerId },
     });
   }
