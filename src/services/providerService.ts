@@ -44,9 +44,9 @@ const providerService = {
     }
   },
 
-  async getOne(productId: number): Promise<Provider> {
+  async getOne(providerId: number): Promise<Provider> {
     try {
-      const result = await api.get<Provider>(`/providers/${productId}`);
+      const result = await api.get<Provider>(`/providers/${providerId}`);
       return result.data;
     } catch (error) {
       throw new Error(error);

@@ -70,8 +70,7 @@ function Movimentacoes() {
   function handleTransactionChange(transactionId: Number | null) {
     toggleModal({
       title: "Movimentação",
-      content: <TransactionForm />,
-      route: !transactionId ? "add" : `update/${transactionId}`,
+      content: <TransactionForm />,      
       params: { transactionId, afterTransactionSave: fetchTransactionList },
     });
   }

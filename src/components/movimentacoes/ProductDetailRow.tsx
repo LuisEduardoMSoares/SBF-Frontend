@@ -78,6 +78,7 @@ export default function ProductDetailRow({ row }: any) {
         loading={loading}
         disableColumnMenu={true}
         className={classes.root}
+        disableSelectionOnClick={true}
       />
     );
   } else return null;
