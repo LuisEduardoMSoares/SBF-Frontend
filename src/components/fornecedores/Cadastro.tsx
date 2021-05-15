@@ -74,8 +74,8 @@ export default function CadastroFornecedor() {
   const [phoneNumber, setPhoneNumber] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [contactName, setContactName] = useState<string>('')
-  const [message, setMessage] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, _setMessage] = useState<string>('');
+  const [isOpen, _setIsOpen] = useState<boolean>(false);
 
   const classes = useStyles()
   const { toggleModal, modalParams } = useModal();
