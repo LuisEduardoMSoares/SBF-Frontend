@@ -1,6 +1,6 @@
 import React from "react";
 import { DataTypeProvider } from "@devexpress/dx-react-grid";
-import DateFnsUtils from "@date-io/date-fns";
+import DateFnsUtils from "@date-io/date-fns/";
 import { Chip, makeStyles } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -22,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const DateFormatter = ({ value }:any) => DateUtils.format(value, 'dd/MM/yyyy');
+
+export const DateFormatter = ({ value }:any) =>  {
+  return DateUtils.format(DateUtils.parse(value,'yyyy-MM-dd'), 'dd/MM/yyyy')
+}
 
 export const DateTypeProvider = (props: any) => (
   <DataTypeProvider
