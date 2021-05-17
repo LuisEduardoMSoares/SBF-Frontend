@@ -289,7 +289,7 @@ export default function CadastroMovimentacao() {
                 required
                 fullWidth
                 id="transactionType"
-                label="Tipo de Transação"
+                label="Tipo de Movimentação"
                 name="transactionType"
                 autoComplete="off"
                 autoFocus
