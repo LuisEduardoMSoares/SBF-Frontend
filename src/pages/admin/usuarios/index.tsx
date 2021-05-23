@@ -5,7 +5,6 @@ import Box from "@material-ui/core/Box";
 import { Button, debounce, makeStyles, TextField } from "@material-ui/core";
 import { faUsersCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import withGuard from "utils/withGuard";
 import User from "models/user";
 import userService from "services/userService";
 import useModal from "hooks/useModal";
@@ -19,6 +18,8 @@ import {
 } from "@material-ui/data-grid";
 import ContextMenu, { ContextMenuOption } from "components/contextMenu";
 import Swal from "sweetalert2";
+
+import withAdminGuard from "utils/withAdminGuard";
 
 const Cadastro = dynamic(() => import("components/usuarios/Cadastro"), {
   ssr: false,
@@ -43,6 +44,14 @@ function Usuarios() {
       flex: 2,
       headerClassName: classes.head,
       cellClassName: defineCellClass,
+    },
+    {
+      field: "admin",
+      headerName: "Tipo",
+      flex: 0.75,
+      headerClassName: classes.head,
+      cellClassName: defineCellClass,
+      renderCell: (params: GridCellParams) => <>{params.value ? "Administrador" : "Funcionário"}</>,
     },
     {
       field: "email",
@@ -103,7 +112,7 @@ function Usuarios() {
   }
 
   function formatUserRow(user: User) {
-    const { id, first_name, last_name, email } = user;
+    const { id, admin, first_name, last_name, email } = user;
     let updatedOn = user.metadatetime
       ? new Date(
           user.metadatetime.updated_on
@@ -124,6 +133,7 @@ function Usuarios() {
     return {
       id,
       name: first_name + " " + last_name,
+      admin,
       email,
       updatedOn,
       actions,
@@ -262,4 +272,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default withGuard(Usuarios);
+export default withAdminGuard(Usuarios);
