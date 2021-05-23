@@ -101,7 +101,7 @@ export default function CadastroMovimentacao() {
     initialTransactionState
   );
   const [transactionDate, setTransactionDate] = useState<Date>(new Date());
-  const [transactionType, setTransactionType] = useState<string>("");
+  const [transactionType, setTransactionType] = useState<string>("ENTRADA");
   const [transactionProviderId, setTransactionProviderId] = useState<string>("");
   const [
     transactionDescription,

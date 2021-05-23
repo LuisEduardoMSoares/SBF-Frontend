@@ -130,7 +130,7 @@ function Produtos() {
                 action: handleProductChange,
               },
               {
-                title: "Entrada/Saída",
+                title: "Registrar Movimentação",
                 action: handleProductTransactionStart,
               },
               {

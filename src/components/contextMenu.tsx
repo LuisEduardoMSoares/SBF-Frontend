@@ -42,7 +42,7 @@ export default function contextMenu({
         onClose={handleClose}
         PaperProps={{
           style: {
-            width: '20ch',
+            width: '25ch',
             border: 'solid 1px rgba(0,0,0,0.15)'
           },
           elevation: 1

@@ -52,7 +52,7 @@ export default class TransactionService {
         transaction.type === "ENTRADA" ? "incoming" : "outgoing";
       transaction = this.parseDates(transaction)      
       const newTransaction: Transaction = await api.post(
-        `${saveEndpoint}/transaction`,
+        `${saveEndpoint}/transaction/`,
         transaction
       );
 
