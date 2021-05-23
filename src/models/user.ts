@@ -4,6 +4,7 @@ export default interface User {
   first_name: string
   last_name: string
   email: string
+  admin: boolean
   password?: string
   metadatetime?: metaData
 }
