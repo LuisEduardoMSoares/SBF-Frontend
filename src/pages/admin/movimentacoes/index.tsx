@@ -207,7 +207,7 @@ function Movimentacoes() {
             const transactionRow: transactionRow = {
               date,
               type,
-              description,
+              description: description || "-",
               providerId: provider_id || "-",
               providerName: provider_name || "-",
               products: transactionProducts,

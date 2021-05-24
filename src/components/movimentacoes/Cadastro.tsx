@@ -191,9 +191,6 @@ export default function CadastroMovimentacao() {
     if(!transactionDate) {
       errorMessage.push(" - Preencha uma <strong>Data</strong> para registrar a movimentação.")
     }
-    if(!transactionDescription) {
-      errorMessage.push(" - Preencha uma <strong>Descrição</strong> para registrar a movimentação.")
-    }
 
     if(errorMessage.length > 0) {
       Swal.fire({
@@ -205,7 +202,7 @@ export default function CadastroMovimentacao() {
       return false
     } 
 
-    return transactionDate && transactionDescription && isProductListValid();
+    return transactionDate && isProductListValid();
   }
 
   function isProductListValid() {
@@ -238,6 +235,8 @@ export default function CadastroMovimentacao() {
         title: "Oops!",
         html: `Alguns produtos não foram configurados adequadamente.<br />Por gentileza, verifique os itens a seguir:<br /><br />${errorMessage.join("<br />")}`
       });
+
+      return false;
     }
 
     return true;
@@ -266,7 +265,6 @@ export default function CadastroMovimentacao() {
       if (productId) {
         setTransactionProducts([
           { product_id: productId, quantity: 1 },
-          ...transactionProducts,
         ]);
       }
       providerService.list().then((response) => {
@@ -386,10 +384,9 @@ export default function CadastroMovimentacao() {
                 variant="outlined"
                 size="small"
                 margin="dense"
-                required
                 fullWidth
                 id="name"
-                label="Descrição"
+                label="Descrição (opcional)"
                 name="transactionDescription"
                 autoComplete="off"
                 autoFocus
