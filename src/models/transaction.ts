@@ -17,5 +17,5 @@ export interface transactionProduct {
   product_id?: number|string,
   product_name?: string,
   product_size?: string,
-  quantity?: number|string
+  quantity?: number
 }

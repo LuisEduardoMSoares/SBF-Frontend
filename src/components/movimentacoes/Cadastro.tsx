@@ -109,7 +109,7 @@ export default function CadastroMovimentacao() {
   ] = useState<string>();
   const [transactionProducts, setTransactionProducts] = useState<
     transactionProduct[]
-  >([{ product_id: "", quantity: "" }]);
+  >([{ product_id: "", quantity: 0 }]);
 
   const [productList, setProductList] = useState<Product[]>([]);
   const [providerList, setProviderList] = useState<Provider[]>([]);
@@ -133,7 +133,7 @@ export default function CadastroMovimentacao() {
   function handleAddClick() {
     setTransactionProducts([
       ...transactionProducts,
-      { product_id: "", quantity: "" },
+      { product_id: "", quantity: 0 },
     ]);
   }
 
@@ -143,17 +143,10 @@ export default function CadastroMovimentacao() {
     if (value === "SAIDA") setTransactionProviderId('');
   }
 
-  const isFormChanged =
-    transactionType ||
-    transactionProviderId ||
-    transactionDescription ||
-    transactionProducts.filter((item) => item.product_id && item.quantity)
-      .length > 0;
-
   async function handleTransactionSave(event: FormEvent) {
     event.preventDefault();
 
-    if (isFormChanged) {
+    if (isFormValid()) {
       const transactionData: Transaction = {
         date: transactionDate,
         type: transactionType as transactionType,
@@ -182,38 +175,87 @@ export default function CadastroMovimentacao() {
 
         toggleModal({});
       } catch (error) {
+        const errorMessage: string = `Erro ao salvar a movimentação.<br /> Mensagem de erro: ${error}`;
+
         Swal.fire({
           icon: "error",
           title: "Oops!",
-          text: `Erro ao salvar a movimentação. Mensagem de erro: ${error}`,
+          html: errorMessage.replace("Error: ", "")
         });
       }
-    } else {
-      Swal.fire({
-        text: "Altere algo para gravar a movimentação",
-        position: "bottom",
-        timer: 2500,
-        showConfirmButton: true,
-        toast: true,
-      });
     }
   }
 
-  async function handleCancel() {
-    if (isFormChanged) {
-      await Swal.fire({
-        showCancelButton: true,
-        title: "Cancelar Movimentação",
-        text: "Tem certeza de que deseja cancelara movimentação atual?",
-        icon: "warning",
-        cancelButtonText: "Não, voltar ao formulário",
-        confirmButtonText: "Sim, descartar alterações",
-        confirmButtonColor: "#FF0000",
-        cancelButtonColor: "#556cd6",
-      }).then((result: any) => {
-        if (result.isConfirmed) toggleModal({});
+  function isFormValid() {
+    const errorMessage: string[] = [];
+    if(!transactionDate) {
+      errorMessage.push(" - Preencha uma <strong>Data</strong> para registrar a movimentação.")
+    }
+    if(!transactionDescription) {
+      errorMessage.push(" - Preencha uma <strong>Descrição</strong> para registrar a movimentação.")
+    }
+
+    if(errorMessage.length > 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        html: `Alguns campos não foram preenchidos corretamente.<br />Por gentileza, verifique os itens a seguir:<br /><br />${errorMessage.join("<br />")}`
       });
-    } else toggleModal({});
+
+      return false
+    } 
+
+    return transactionDate && transactionDescription && isProductListValid();
+  }
+
+  function isProductListValid() {
+    if(transactionProducts.length === 0) {
+
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: "Adicione produtos para registrar uma movimentação"
+      });
+
+      return false;
+    }
+
+    const notValidProducts = transactionProducts.filter(item => !item.product_id || !item.quantity || item.quantity <= 0)
+    if(notValidProducts.length > 0) {
+      let errorMessage:string[] = [];
+      notValidProducts.map(item => {
+        console.log(item)
+        let product = productList.find(p => item.product_id == p.id);
+        if(!product) {
+          errorMessage.push('- Produto obrigatório não selecionado.')
+        } else if(!item.quantity || isNaN(item.quantity as number) || item.quantity <= 0) {
+          errorMessage.push(`- Quantidade do item <strong>${product.name} (${product.size})</strong> configurada incorretamente.`)
+        }
+      })
+
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        html: `Alguns produtos não foram configurados adequadamente.<br />Por gentileza, verifique os itens a seguir:<br /><br />${errorMessage.join("<br />")}`
+      });
+    }
+
+    return true;
+  }
+
+  async function handleCancel() {
+    await Swal.fire({
+      showCancelButton: true,
+      title: "Cancelar Movimentação",
+      text: "Tem certeza de que deseja cancelara movimentação atual?",
+      icon: "warning",
+      cancelButtonText: "Não, voltar ao formulário",
+      confirmButtonText: "Sim, descartar alterações",
+      confirmButtonColor: "#FF0000",
+      cancelButtonColor: "#556cd6",
+    }).then((result: any) => {
+      if (result.isConfirmed) toggleModal({});
+    });    
   }
 
   useEffect(() => {
@@ -265,6 +307,7 @@ export default function CadastroMovimentacao() {
                   variant="inline"
                   inputVariant="outlined"
                   format="dd/MM/yyyy"
+                  required
                   margin="dense"
                   id="transaction-date"
                   label="Data da Movimentação"
@@ -314,7 +357,6 @@ export default function CadastroMovimentacao() {
                   size="small"
                   margin="dense"
                   select
-                  required
                   fullWidth
                   id="transactionProviderId"
                   label="Fornecedor (opcional)"
@@ -327,6 +369,9 @@ export default function CadastroMovimentacao() {
                   value={transactionProviderId}
                   disabled={loading}
                 >
+                  <MenuItem value="">
+                    Selecione...
+                  </MenuItem>
                   {providerList.map((option) => (
                     <MenuItem key={option.id} value={option.id}>
                       {option.name}
@@ -410,7 +455,7 @@ export default function CadastroMovimentacao() {
                             key={product.id as number}
                             value={product.id as number}
                           >
-                            {product.name}
+                            {product.name} ({product.size})
                           </MenuItem>
                         ))}
                     </TextField>

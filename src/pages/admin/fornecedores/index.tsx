@@ -103,7 +103,7 @@ function Fornecedores() {
                 action: handleProviderChange
               },
               {
-                title: 'Adicionar Entrada',
+                title: 'Registrar Entrada',
                 action: handleProviderTransactionStart
               },
               {

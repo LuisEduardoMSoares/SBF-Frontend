@@ -50,7 +50,8 @@ export default class TransactionService {
     try {
       const saveEndpoint =
         transaction.type === "ENTRADA" ? "incoming" : "outgoing";
-      transaction = this.parseDates(transaction)      
+      transaction = this.parseDates(transaction)
+      if(!transaction.provider_id) delete transaction.provider_id;
       const newTransaction: Transaction = await api.post(
         `${saveEndpoint}/transaction/`,
         transaction
@@ -58,9 +59,7 @@ export default class TransactionService {
 
       return newTransaction;
     } catch (error) {
-      const errorMessage = error.response.data.detail.map(
-        ({ loc, msg }: any) => ` ${loc[loc.length - 1]} - ${msg}`
-      );
+      const errorMessage = error.response.data.detail;
       throw new Error(errorMessage);
     }
   }
