@@ -7,7 +7,7 @@ import {
   makeStyles,
   TextField,
   Theme,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { faBan, faSave, faTshirt } from "@fortawesome/free-solid-svg-icons";
@@ -21,12 +21,12 @@ import { validatePattern, validatorsPatternList } from "utils/validators";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formTitle: {
-      paddingBottom: theme.spacing(2),
+      paddingBottom: theme.spacing(2)
     },
     formActions: {
       textAlign: "right",
-      marginTop: theme.spacing(3),
-    },
+      marginTop: theme.spacing(3)
+    }
   })
 );
 
@@ -34,12 +34,12 @@ const initialProductState: Product = {
   name: "",
   size: "",
   inventory: 0,
-  weight: 0,
+  weight: 0
 };
 
 interface productValidate {
-  isOk: boolean,
-  messageError: string[]
+  isOk: boolean;
+  messageError: string[];
 }
 
 function productValidation(product: Product): productValidate {
@@ -47,15 +47,19 @@ function productValidation(product: Product): productValidate {
   const listMessagesError = [];
   if (!validatePattern(validatorsPatternList.name, product.name)) {
     isOk = false;
-    listMessagesError.push('Nome do produto inválido, informe um nome com ao menos com 3 caracteres.');
+    listMessagesError.push(
+      "Nome do produto inválido, informe um nome com ao menos com 3 caracteres."
+    );
   }
   if (!validatePattern(validatorsPatternList.productSize, product.size)) {
     isOk = false;
-    listMessagesError.push('Tamanho do produto inválido.');
+    listMessagesError.push("Tamanho do produto inválido.");
   }
   if (product.inventory < 0) {
     isOk = false;
-    listMessagesError.push('Quantidade do produto inválida. Informe 0 ou mais.');
+    listMessagesError.push(
+      "Quantidade do produto inválida. Informe 0 ou mais."
+    );
   }
   return {
     isOk,
@@ -75,7 +79,6 @@ export default function CadastroProdutos() {
   const { productId, afterProductSave } = modalParams;
 
   useEffect(() => {
-
     if (productId) {
       productService
         .getOne(productId)
@@ -94,50 +97,36 @@ export default function CadastroProdutos() {
     name != product.name ||
     inventory != product.inventory ||
     weight != product.weight ||
-    size != product.size
+    size != product.size;
 
   async function handleProductSave($event: FormEvent) {
     $event.preventDefault();
-
-    if (isFormChanged) {
-
-      const newProduct: Product = {
-        id: productId,
-        name,
-        inventory,
-        size,
-        weight,
-      };
-      const validation = productValidation(newProduct);
-      if (validation.isOk) {
-        await productService.save(newProduct).then(() => {
-          afterProductSave()
-        });
-
-        //Swal.fire("Sucesso!", "Produto cadastrado com sucesso!", "success");
-        Swal.fire({
-          title: "Sucesso!",
-          html: `<b>${name} (${size})</b> ${product.id ? 'modificado' : 'cadastrado'} com sucesso!`,
-          icon: "success"
-        });
-
-        toggleModal({})
-      } else {
-        Swal.fire({
-          title: 'Foram encontrados os seguintes erros no cadastro',
-          html: `${validation.messageError.join('<br>')}`,
-          icon: 'error'
-        });
-      }
+    const newProduct: Product = {
+      id: productId,
+      name,
+      inventory,
+      size,
+      weight
+    };
+    const validation = productValidation(newProduct);
+    if (validation.isOk) {
+      await productService.save(newProduct).then(() => {
+        afterProductSave();
+      });
+      Swal.fire({
+        title: "Sucesso!",
+        html: `<b>${name} (${size})</b> ${
+          product.id ? "modificado" : "cadastrado"
+        } com sucesso!`,
+        icon: "success"
+      });
+      toggleModal({});
     } else {
       Swal.fire({
-        text: "Nada foi alterado",
-        position: "bottom",
-        timer: 2500,
-        showConfirmButton: false,
-        toast: true
-      })
-      toggleModal({})
+        title: "Foram encontrados os seguintes erros no cadastro",
+        html: `${validation.messageError.join("<br>")}`,
+        icon: "error"
+      });
     }
   }
 
@@ -151,7 +140,7 @@ export default function CadastroProdutos() {
         cancelButtonText: "Não, voltar ao formulário",
         confirmButtonText: "Sim, descartar alterações",
         confirmButtonColor: "#FF0000",
-        cancelButtonColor: "#556cd6",
+        cancelButtonColor: "#556cd6"
       }).then((result: any) => {
         if (result.isConfirmed) toggleModal({});
       });
@@ -183,7 +172,7 @@ export default function CadastroProdutos() {
             name="name"
             autoComplete="off"
             autoFocus
-            onChange={(event) => setName(event.target.value)}
+            onChange={event => setName(event.target.value)}
             value={name}
           />
 
@@ -197,7 +186,7 @@ export default function CadastroProdutos() {
             label="Tamanho"
             name="size"
             autoComplete="off"
-            onChange={(event) => setSize(event.target.value)}
+            onChange={event => setSize(event.target.value)}
             value={size}
           />
 
@@ -213,7 +202,7 @@ export default function CadastroProdutos() {
             label="Quantidade"
             name="inventory"
             autoComplete="off"
-            onChange={(event) => setInventory(parseFloat(event.target.value))}
+            onChange={event => setInventory(parseFloat(event.target.value))}
             value={inventory}
           />
 
@@ -229,7 +218,7 @@ export default function CadastroProdutos() {
             label="Peso (kg)"
             name="weight"
             autoComplete="off"
-            onChange={(event) =>
+            onChange={event =>
               setWeight(
                 event.target.value
                   ? parseFloat(event.target.value) < 0
@@ -242,7 +231,7 @@ export default function CadastroProdutos() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">Kg</InputAdornment>
-              ),
+              )
             }}
           />
 
@@ -255,10 +244,12 @@ export default function CadastroProdutos() {
             spacing={1}
           >
             <Grid item>
-              <Button size="large"
+              <Button
+                size="large"
                 color="primary"
                 variant="outlined"
-                onClick={handleCancel}>
+                onClick={handleCancel}
+              >
                 <FontAwesomeIcon icon={faBan} />
                 &nbsp; Cancelar
               </Button>
@@ -270,7 +261,8 @@ export default function CadastroProdutos() {
                 color="primary"
                 type="submit"
               >
-                <FontAwesomeIcon icon={faSave} /> &nbsp; {productId ? "Alterar" : "Cadastrar"}
+                <FontAwesomeIcon icon={faSave} /> &nbsp;{" "}
+                {productId ? "Alterar" : "Cadastrar"}
               </Button>
             </Grid>
           </Grid>

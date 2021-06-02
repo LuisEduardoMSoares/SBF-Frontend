@@ -203,6 +203,7 @@ function Fornecedores() {
 
       <Box my={4}>
         <DataGrid
+          hideFooterSelectedRowCount={true}
           autoHeight={true}
           page={page}
           onPageChange={(params) => {

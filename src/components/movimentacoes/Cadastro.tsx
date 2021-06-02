@@ -265,6 +265,7 @@ export default function CadastroMovimentacao() {
       if (productId) {
         setTransactionProducts([
           { product_id: productId, quantity: 1 },
+          ...transactionProducts,
         ]);
       }
       providerService.list().then((response) => {
