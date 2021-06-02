@@ -26,6 +26,9 @@ export interface transactionFilters {
 }
 
 export default class TransactionService {
+  
+  public DateUtils = new DateFnsUtils({locale: ptBR});
+
   public async fetch(
     filters: transactionFilters = {
       page: 0,
@@ -65,9 +68,7 @@ export default class TransactionService {
   }
 
   private parseDates(transaction: Transaction) {
-    const DateUtils = new DateFnsUtils({locale: ptBR});
-
-    transaction.date = DateUtils.format(new Date(transaction.date), 'yyyy-MM-dd')
+    transaction.date = this.DateUtils.format(new Date(transaction.date), 'yyyy-MM-dd')
     return transaction
   }
 
@@ -84,9 +85,8 @@ export default class TransactionService {
       parsedFilter.provider_name = filters.provider_name;
     
     if(filters.start_date || filters.finish_date) {
-      const DateUtils = new DateFnsUtils({locale: ptBR});
-      if(filters.start_date) parsedFilter.start_date = DateUtils.format(filters.start_date, "yyyy-MM-dd")
-      if(filters.finish_date) parsedFilter.finish_date = DateUtils.format(filters.finish_date, "yyyy-MM-dd")
+      if(filters.start_date) parsedFilter.start_date = this.DateUtils.format(filters.start_date, "yyyy-MM-dd")
+      if(filters.finish_date) parsedFilter.finish_date = this.DateUtils.format(filters.finish_date, "yyyy-MM-dd")
     }
 
     return parsedFilter;

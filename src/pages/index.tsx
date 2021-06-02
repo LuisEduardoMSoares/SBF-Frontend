@@ -37,7 +37,8 @@ export default function SignIn() {
       showMessage({
         type: 'error',
         title: 'erro',
-        text: error.response.data.detail
+        text: error.response.data.detail,
+        timeout: 1500
       })
     })
   }
