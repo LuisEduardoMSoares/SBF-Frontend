@@ -71,6 +71,7 @@ export default function ProductDetailRow({ row }: any) {
   if (row.products) {
     return (
       <DataGrid
+        hideFooterSelectedRowCount={true}
         key={row.products}
         autoHeight={true}
         rows={row.products}

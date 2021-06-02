@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import Provider from 'models/provider';
 import providerService from 'services/providerService';
 import { validatePattern, validatorsPatternList } from 'utils/validators';
+import { cnpj } from 'cpf-cnpj-validator';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,7 +40,7 @@ interface providerValidate {
 function providerValidation(provider: Provider): providerValidate {
   let isOk = true;
   const listMessagesError = [];
-  if (!validatePattern(validatorsPatternList.cnpj, provider.cnpj)) {
+  if (!validatePattern(validatorsPatternList.cnpj, provider.cnpj) || !cnpj.isValid(provider.cnpj)) {
     isOk = false;
     listMessagesError.push('CNPJ inválido');
   }
