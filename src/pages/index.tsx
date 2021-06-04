@@ -39,7 +39,8 @@ export default function SignIn() {
       showMessage({
         type: 'error',
         title: 'erro',
-        text: error.response.data.detail
+        text: error.response.data.detail,
+        timeout: 1500
       })
     })
   }
@@ -88,13 +89,6 @@ export default function SignIn() {
             Entrar
           </Button>
 
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Esqueci minha senha
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
     </Container>
