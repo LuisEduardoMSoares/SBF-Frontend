@@ -31,7 +31,7 @@ export default function Messages() {
         <Alert 
           action={
             <Button color="inherit" size="small" onClick={hideMessage}>
-              close
+              fechar
             </Button>
           }
           variant="filled" 

@@ -23,8 +23,8 @@ api.interceptors.response.use((response) => {
     const requestConfig = error.config;
     if(!requestConfig.url.endsWith('login')) {
       Swal.fire({
-        title: "Sessão Expirada!",
-        text: "Sua sessão expirou, por favor, efetue login novamente",
+        title: "Acesso negado!",
+        text: "Você não possui permissão para acessar o recurso solicitado. Em caso de dúvidas, contate o administrador do sistema.",
         icon: "warning",
         confirmButtonText: "OK"
       })

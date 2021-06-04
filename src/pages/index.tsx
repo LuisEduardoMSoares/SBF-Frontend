@@ -39,7 +39,7 @@ export default function SignIn() {
       showMessage({
         type: 'error',
         title: 'erro',
-        text: error.response.data.detail,
+        text: "Credenciais inválidas",
         timeout: 1500
       })
     })

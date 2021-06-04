@@ -75,21 +75,23 @@ export default function TransactionChart() {
   }, []);
 
   async function fetchTransactions() {
+    try {
     const result = await transactionService.fetch({
       start_date: transactionService.DateUtils.addDays(new Date(), -15),
       finish_date: new Date(),
       per_page: 100
-    });
+    })
 
     const chartTransactions: any = result.records
       .map(transaction => {
-        const { date, type } = transaction
+        const { date, type, products } = transaction
         const DateUtils = new DateFnsUtils({locale: ptBR})
 
         let newDate = DateUtils.format(DateUtils.parse(date as string, 'yyyy-MM-dd'), 'dd/MM')
         return {
           date: newDate,
-          type
+          type,
+          products
         }
       })
       .reduce((acumulator: any, value: any) => {
@@ -99,7 +101,11 @@ export default function TransactionChart() {
           dayRecord = {
             day: value.date,
             incoming: 0,
-            outgoing: 0
+            incomingProducts: 0,
+            incomingTotalProducts: 0,
+            outgoing: 0,
+            outgoingProducts: 0,
+            outgoingTotalProducts: 0
           }
 
           acumulator.push(dayRecord);
@@ -107,14 +113,23 @@ export default function TransactionChart() {
         
         if(value.type === "ENTRADA") {
           dayRecord.incoming++
+          dayRecord.incomingProducts += value.products.length;
+          dayRecord.incomingTotalProducts += value.products.reduce((acc: any, val: any) => { acc+= val.quantity; return acc }, 0)
         } else {
           dayRecord.outgoing++
+          dayRecord.incomingProducts += value.products.length;
+          dayRecord.outgoingTotalProducts += value.products.reduce((acc: any, val: any) => { acc+=  val.quantity; return acc }, 0)
         }
 
         return acumulator
       }, []);
+    
+      console.log(chartTransactions);
 
-    setChartData(chartTransactions);
+      setChartData(chartTransactions);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

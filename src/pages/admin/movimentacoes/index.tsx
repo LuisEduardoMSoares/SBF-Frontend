@@ -153,9 +153,15 @@ function Movimentacoes() {
   const [transactionRows, setTransactionRows] = useState<transactionRow[]>([]);
   const [expandedRowIds, setExpandedRowIds] = useState<(string | number)[]>([]);
 
-  const tableMessages = {
+  const tableMessages : any = {
     noData: loading ? 'Carregando dados...' : 'Não foram encontradas movimentações nos parâmetros fornecidos.',
   };
+
+  const pagingPanelMessages: any = {
+    rowsPerPage: 'Linhas por página',
+    info: '{from} - {to} de {count}',
+  };
+  
 
   function handleTransactionChange(transactionId: Number | null) {
     toggleModal({
@@ -435,7 +441,7 @@ function Movimentacoes() {
               contentComponent={TableHeaderContentBase}
             />
             <TableRowDetail contentComponent={ProductDetailRow} />
-            <PagingPanel pageSizes={[3, 5, 10, 20, 50, 100]} />
+            <PagingPanel pageSizes={[3, 5, 10, 20, 50, 100]} messages={pagingPanelMessages} />
           </DXGrid>
           {loading && <Loading />}
         </Paper>
