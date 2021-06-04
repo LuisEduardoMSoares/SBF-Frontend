@@ -89,13 +89,6 @@ export default function SignIn() {
             Entrar
           </Button>
 
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Esqueci minha senha
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
     </Container>
